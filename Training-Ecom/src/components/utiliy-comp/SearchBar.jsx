@@ -1,10 +1,15 @@
 import React from 'react'
 
-export default function SearchBar({onChangeHandler, OnEnterHandler, searchText}) {
+
+export default function SearchBar({onChangeHandler, OnEnterHandler, searchText, extraFilters}) {
   return (
         <form onSubmit={OnEnterHandler} className='h-10 min-w-56 w-full rounded-4xl border-2 border-blue-500 flex'>
-            <div className='flex-initial max-w-60 w-1/4 bg-white  text-blue-500 hover:text-white border-r-2 rounded-l-4xl'>
-                <div ></div>
+            <div className='flex-initial max-w-60 w-1/4 bg-white  text-blue-500 border-r-2 rounded-l-4xl'>
+                <div className='flex' >
+                    {extraFilters.map((filter)=>(
+                        <div className='flex-1 flex justify-center items-center w-1/2 h-9 '> {<filter.component props={filter.componentSpecifics} />}</div>
+                    ))}
+                </div>
             </div>
             <div className='flex-1 w-2/4'>
                 <input type="text" onChange={onChangeHandler}  placeholder='Looking for Something?' className=' px-4 focus:outline-none  rounded-l-4xl w-full h-full placeholder:font-extralight placeholder:text-gray-500' />
