@@ -26,7 +26,7 @@ export default function RangeFilter({ label, min, max, range, setRangeHandle }) 
         open={open}
         onOpenChange={handleOpenChange}
         dropdownRender={() => (
-          <div className="bg-white p-4 shadow-md rounded-md w-64">
+          <div className="bg-white p-4 shadow-md w-full rounded-md w-64">
             <div className="flex justify-between text-sm text-gray-600 mb-2">
               <span className="text-blue-500">Min: {range[0]}</span>
               <span className="text-blue-500">Max: {range[1]}</span>
