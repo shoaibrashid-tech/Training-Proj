@@ -1,8 +1,9 @@
 import React from 'react'
 import SecondaryButton from './utiliy-comp/SecondaryButton'
 import PrimaryButton from './utiliy-comp/PrimaryButton'
+import { useNavigate } from 'react-router-dom'
 function ProductCard({product}) {
-
+    const navigate = useNavigate();
 
   return (
     <div className= 'h-126 w-88 bg-white rounded-lg shadow-2xl shadow-black' >
@@ -35,7 +36,7 @@ function ProductCard({product}) {
                 <p className='my-4 px-2 line-clamp-3 text-sm'>
                     {product.description}
                 </p>
-                <PrimaryButton buttonText={"Buy Now"} />
+                <PrimaryButton buttonText={"Buy Now"} onClickHandler={()=> navigate(`/product/${product.id}`)} />
             </div>
         </div>
 

@@ -1,221 +1,141 @@
-import { useState, useEffect } from 'react'
-import ProductCard from '../components/ProductCard'
-import Loading from '../components/Loading'
-import SearchFilter from '../components/utiliy-comp/Filters_Generic/SearchFilter'
-import DropDownFilter from '../components/utiliy-comp/Filters_Generic/DropDownFilter'
-import RangeFilter from '../components/utiliy-comp/Filters_Generic/RangeFilter'
-import { useDebounce } from '../Utils/useDebounce'
+import React, {useEffect, useState} from 'react'
+import { useParams } from 'react-router-dom';
+import { StarIcon } from '@heroicons/react/20/solid'
+import Loading from '../components/Loading';
+import PrimaryButton from '../components/utiliy-comp/PrimaryButton';
 
-function ProductPage() {
-  
-  const [products, setProduct] = useState([]);
-  const [filter, setfilter] = useState('');
-  //const [selectedKeys, setSelectedKeys] = useState([]);
-  const [catagories, setCatagories] = useState([]);
-  const [selectedCatagories, setSelectedCatagories] = useState([]);
-  const min = 10;
-  const max = 30000;
-  const [range, setRange] = useState([min, max]);
-  const [catFlag, setCatFlag] = useState(false);
-  const [loading, setLoading] = useState(true);
-  /*const searchExtraFilters = [
-    {
-      text: 'Catagory',
-      component: Catagory,
-      componentSpecifics: {
-            items : items,
-            setSelectedKeysHandler: setSelectedKeys,
-      },
-    }
-
-  ]*/
-
-    async function fetchProducts(newFilter, newRange, newCategories) {
-  let base = "https://api.escuelajs.co/api/v1/products";
-
-  const params = new URLSearchParams();
-
-  if (newFilter) {
-    params.append("title", newFilter);
-  }
-
-  if (newRange && (newRange[0] > min || newRange[1] < max)) {
-    params.append("price_min", newRange[0]);
-    params.append("price_max", newRange[1]);
-  }
-
-  if (newCategories && newCategories.length > 0) {
-    params.append("categoryId", newCategories.join(","));
-  }
-
-  const link = `${base}?${params.toString()}`;
-
-  setLoading(true);
-  const response = await fetch(link);
-  const data = await response.json();
-
-  setProduct(data);
-  setLoading(false);
-}
-  async function GetPoducts() {
-    let base = "https://api.escuelajs.co/api/v1/products";
-
-    const params = new URLSearchParams();
+export default function ProductPage() {
+    const {id} = useParams();
+    const [product, setProduct] = useState();
+    const reviews = { href: '#', average: 4, totalCount: 117 }
+    const imageClasses = [
+    "row-span-2 aspect-4/5 size-full object-cover sm:rounded-lg lg:aspect-3/4",
+    "row-span-2 aspect-3/4 size-full rounded-lg object-cover max-lg:hidden",
+    "col-start-2 aspect-3/2 size-full rounded-lg object-cover max-lg:hidden",
+    "col-start-2 row-start-2 aspect-3/2 size-full rounded-lg object-cover max-lg:hidden",
     
-    // search filter
-    if (debouncedFilter) {
-      params.append("title", debouncedFilter);
-    }
+    ];
+    const addToCart = () => {
+        const cart = JSON.parse(localStorage.getItem("cart")) || [];
 
-    // price range filter
-    if (debouncedRange && (debouncedRange[0]>min || debouncedRange[1]<max)) {
-      params.append("price_min", debouncedRange[0]);
-      params.append("price_max", debouncedRange[1]);
-    }
+        const existingProduct = cart.find((item) => item.id === product.id);
 
-    // category filter
-    if (selectedCatagories && selectedCatagories.length > 0) {
-    //console.log(selectedCatagories);
-      params.append("categoryId", "320");
-    }
+        if (existingProduct) {
+            existingProduct.quantity += 1;
+        } else {
+            cart.push({
+            ...product,
+            quantity: 1,
+            });
+        }
 
-    const link = `${base}?${params.toString()}`;
-    const response = await fetch(link);
-    setLoading(true);
-    const products = await response.json();
-    console.log(catagories);
-    return products;
-
-
-  }
-  function retreiveProduct(){
-      const product = localStorage.getItem("Product");
-      if(!product) return false;
-      return JSON.parse(product);
-  }
-
-
-  const debouncedFilter = useDebounce(filter, 1000);
-  const debouncedRange = useDebounce(range, 500);
-  const debouncedCatagories = useDebounce(selectedCatagories, 500);
-  
-  const handleSearch = (value) => {
-    setfilter(value);
-    fetchProducts(value, range, selectedCatagories);
+        localStorage.setItem("cart", JSON.stringify(cart));
+        alert("Product added to cart");
     };
-    const handleRangeChange = (value) => {
-    setRange(value);
-    fetchProducts(filter, value, selectedCatagories);
-    };
-    const handleCategoryChange = (keys) => {
-    setSelectedCatagories(keys);
-    fetchProducts(filter, range, keys);
+    function classNames(...classes) {
+    return classes.filter(Boolean).join(' ')
+    }
+    const FetchData = async ()=>{
+        try{
+            const response = await fetch(`https://api.escuelajs.co/api/v1/products/${id}`);
+            if(!response.ok){
+                throw new Error(`Https Response: ${response.status}`)
+            }
+            const responseData = await response.json();
+            setProduct(responseData);
+        } catch (error){
+            console.error(error.message)
+        }
     };
 
-  useEffect(()=>{
-    //let data = retreiveProduct();
-      GetPoducts().then(
-          response => {
-              console.log("Fetched Data:")
-              console.log(response)
-              const arr = [];
-              setProduct(response)
-              localStorage.setItem("Product", JSON.stringify(response));
-              if(!catFlag){
-                setCatFlag(true);
-              }
-              setLoading(false);
-          }
-      ).catch(
-          error => {console.error(error);}
-      );
-    
-  }, [])
-  useEffect(() => {
-    if (products.length) {
+    useEffect(()=>{
+        
 
-      const uniqueCategories = [
-        ...new Map(
-          products.map(p => [p.category.id, p.category])
-        ).values()
-      ];
+        FetchData();
+        
+        }, [])
 
-      const categoryItems = uniqueCategories.map((cat, index) => ({
-        key: cat.id,
-        label: cat.name
-      }));
-
-      setCatagories(categoryItems);
-      
-    }
-  }, [catFlag]);
+        if(!product){
+            return (
+            <div className='w-full h-screen flex justify-center items-center p-1/2'>
+              <Loading />
+            </div>
+          );
+        }
   return (
+     <div className="bg-white">
+      <div className="pt-6">
+        {/* Image gallery */}
+        <div className="mx-auto mt-6 max-w-2xl sm:px-6 lg:grid lg:max-w-7xl lg:grid-cols-3 lg:gap-8 lg:px-8">
+            {product.images?.slice(0,4).map((img, index) => (
+                <img
+                key={index}
+                src={img}
+                alt={product.title}
+                className={imageClasses[index]}
+                />
+            ))}
+        </div>
 
-    <div>
-      <div className='flex justify-center m-8'>
-        <h1 className=' text-5xl font-bold'>Product Page</h1>
-      </div>
-      
-      <div className='w-full h-20 px-25 flex sm: justify-between items-center'>
-        <div className='w-1/4 flex-initial px-2'>
-           <DropDownFilter
-            items={catagories}
-            selectedKeys={selectedCatagories}
-            setSelectedKeys={handleCategoryChange}
-            />
-        </div>
-        <div className='flex-initial w-1/4 px-2'>
-           <RangeFilter
-            label="Price"
-            min={min}
-            max={max}
-            range={range}
-            setRangeHandle={handleRangeChange}
-            />
-        </div>
-        <div className=' w-2/4 flex-initial px-2'>
-          <SearchFilter
-            setStateToEdit={handleSearch}
-            searchText="Search"
-            />  
-        </div>
-        
-      </div>
-      {/*
-      <div className='w-full h-20 px-30'>
-        <SearchBar bindingState={filter} 
-        onChangeHandler={handleFilterSerch_OnChange} 
-        OnEnterHandler={handleFilterSerch_OnEnter}
-        searchText={"Search"}
-        extraFilters={searchExtraFilters}
-        />
-      </div>
-      */}
-      {!loading ? <>
-      <div className='flex justify-center'>
-        <div className='grid grid-cols-1 sm:grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-4 p-4'>
-          {
-            /**.filter((product) => (
-              product.title.toLowerCase().includes(filter)
-            )) */
-            products.map((product, index) => (
-              <div key={index} className="" > 
-                <ProductCard product={product} />
+        {/* Product info */}
+        <div className="mx-auto max-w-2xl px-4 pt-10 pb-16 sm:px-6 lg:grid lg:max-w-7xl lg:grid-cols-3 lg:grid-rows-[auto_auto_1fr] lg:gap-x-8 lg:px-8 lg:pt-16 lg:pb-24">
+          <div className="lg:col-span-2 lg:border-r lg:border-gray-200 lg:pr-8">
+            <h1 className="text-2xl font-bold tracking-tight text-gray-900 sm:text-3xl">{product.title}</h1>
+          </div>
+
+          {/* Options */}
+          <div className="mt-4 lg:row-span-3 lg:mt-0">
+            <h2 className="sr-only">Product information</h2>
+            <p className="text-3xl tracking-tight text-gray-900">Price: ${product.price}</p>
+
+            {/* Reviews */}
+            <div className="mt-6">
+              <h3 className="sr-only">Reviews</h3>
+              <div className="flex items-center">
+                <div className="flex items-center">
+                  {[0, 1, 2, 3, 4].map((rating) => (
+                    <StarIcon
+                      key={rating}
+                      aria-hidden="true"
+                      className={classNames(
+                        reviews.average > rating ? 'text-gray-900' : 'text-gray-200',
+                        'size-5 shrink-0',
+                      )}
+                    />
+                  ))}
+                </div>
+                <p className="sr-only">{reviews.average} out of 5 stars</p>
+                <a href={reviews.href} className="ml-3 text-sm font-medium text-indigo-600 hover:text-indigo-500">
+                  {reviews.totalCount} reviews
+                </a>
               </div>
-            ))
-          }
+            </div>
+
+           <div className='mt-10'>
+                <PrimaryButton buttonText={"Add to Cart"} onClickHandler={addToCart} />
+           </div>
+          </div>
+
+          <div className="py-10 lg:col-span-2 lg:col-start-1 lg:border-r lg:border-gray-200 lg:pt-6 lg:pr-8 lg:pb-16">
+            {/* Description and details */}
+            <div>
+              <h3 className="sr-only">Description</h3>
+
+              <div className="space-y-6">
+                <p className="text-base text-gray-900">{product.description}</p>
+              </div>
+            </div>
+
+            <div className="mt-10">
+              <h2 className="text-sm font-medium text-gray-900">Details</h2>
+
+              <div className="mt-4 space-y-6">
+                <p className="text-sm text-gray-600">blh blah blah</p>
+              </div>
+            </div>
+          </div>
         </div>
       </div>
-      </> : 
-      <div className='w-full h-screen flex justify-center items-center p-1/2'>
-          <Loading />
-      </div>
-        
-      }
     </div>
-    
-    
   )
 }
-
-export default ProductPage
