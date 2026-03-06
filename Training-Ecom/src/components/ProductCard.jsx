@@ -9,8 +9,8 @@ function ProductCard({product}) {
 
         <div className='w-full h-1/2 px-4 pt-4'>
             <img 
-                    src={product.image} alt='Sneaker Black' 
-                    className='w-full h-full object-contain rounded-sm shadow-sm shadow-500'
+                    src={product.images[0]} alt='Sneaker Black' 
+                    className='w-full h-full object-cover rounded-sm shadow-sm shadow-500'
                 />
         </div>
         <div className='w-full h-1/2 px-4 py-2 text-black '>
