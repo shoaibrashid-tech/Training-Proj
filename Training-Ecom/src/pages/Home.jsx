@@ -35,7 +35,8 @@ function Home() {
   let base = "https://api.escuelajs.co/api/v1/products";
 
   const params = new URLSearchParams();
-
+  params.append("offset", 0);
+  params.append("limit", 50);
   if (newFilter) {
     params.append("title", newFilter);
   }
@@ -59,28 +60,11 @@ function Home() {
   setLoading(false);
 }
   async function GetPoducts() {
-    let base = "https://api.escuelajs.co/api/v1/products";
+    //let base = "https://api.escuelajs.co/api/v1/products?offset=0&limit=50";
 
-    const params = new URLSearchParams();
     
-    // search filter
-    if (debouncedFilter) {
-      params.append("title", debouncedFilter);
-    }
 
-    // price range filter
-    if (debouncedRange && (debouncedRange[0]>min || debouncedRange[1]<max)) {
-      params.append("price_min", debouncedRange[0]);
-      params.append("price_max", debouncedRange[1]);
-    }
-
-    // category filter
-    if (selectedCatagories && selectedCatagories.length > 0) {
-    //console.log(selectedCatagories);
-      params.append("categoryId", "320");
-    }
-
-    const link = `${base}?${params.toString()}`;
+    const link = "https://api.escuelajs.co/api/v1/products?offset=0&limit=50";
     const response = await fetch(link);
     setLoading(true);
     const products = await response.json();
