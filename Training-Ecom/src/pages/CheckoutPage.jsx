@@ -90,7 +90,7 @@ export default function CheckoutPage() {
                 <button
                   type="button"
                   onClick={() => setStep(2)}
-                  className="mt-6 rounded-lg bg-indigo-600 px-6 py-2.5 text-white"
+                  className="mt-6 rounded-lg bg-blue-500 px-6 py-2.5 text-white"
                 >
                   Continue to Payment
                 </button>
@@ -148,7 +148,7 @@ export default function CheckoutPage() {
                   <button
                     type="button"
                     onClick={() => setOpen(true)}
-                    className="rounded-lg bg-indigo-600 px-6 py-2.5 text-white"
+                    className="rounded-lg bg-blue-500 px-6 py-2.5 text-white"
                   >
                     Review Order
                   </button>
@@ -164,9 +164,8 @@ export default function CheckoutPage() {
               <ConfirmModal
                 open={open}
                 setOpen={setOpen}
-                
-
-
+                title={"Confirm Paymen"}
+                description={"Are you sure you want to continue with the payment"}
               />
             )}
 
