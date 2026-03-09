@@ -1,7 +1,12 @@
 import React from 'react'
+import { useDispatch } from 'react-redux';
+import { removeFromCart } from '../features/cart/cartSlice';
+
 
 export default function CartProductCard({item}) {
-    
+
+  const dispatch = useDispatch();
+  
   return (
             <div
               key={item.id}
@@ -53,7 +58,7 @@ export default function CartProductCard({item}) {
                     {item.title}
                   </p>
 
-                  <button className="text-md underline font-bold text-red-700">
+                  <button onClick={()=>dispatch(removeFromCart(item.id))} className="text-md underline font-bold text-red-700">
                     Remove
                   </button>
                 </div>

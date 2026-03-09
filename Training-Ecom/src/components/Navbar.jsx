@@ -1,4 +1,5 @@
 import React, { useState, useContext } from "react";
+import { Link } from "react-router-dom";
 import me from "../assets/Sneakers.webp";
 import { AuthContext } from "../Utils/authContext";
 import { FaUserAlt } from "react-icons/fa";
@@ -11,7 +12,8 @@ export default function Navbar({ menu }) {
     <nav className="bg-blue-500 sticky w-full z-20 top-0 start-0 border-b border-default">
       <div className="max-w-screen-xl flex flex-wrap items-center justify-between mx-auto p-4">
 
-        <a href="/" className="flex items-center space-x-3 rtl:space-x-reverse">
+        {/* LOGO */}
+        <Link to="/" className="flex items-center space-x-3 rtl:space-x-reverse">
           <img
             src="https://flowbite.com/docs/images/logo.svg"
             className="h-7"
@@ -20,7 +22,7 @@ export default function Navbar({ menu }) {
           <span className="self-center text-xl text-heading font-semibold whitespace-nowrap">
             Flowbite
           </span>
-        </a>
+        </Link>
 
         <div className="flex items-center md:order-2 space-x-3 md:space-x-0 rtl:space-x-reverse">
 
@@ -32,20 +34,14 @@ export default function Navbar({ menu }) {
           >
             <span className="sr-only">Open user menu</span>
 
-            {/* If user exists show profile picture */}
             {user ? (
               <img
                 className="w-8 h-8 rounded-full"
                 src={user.photo || me}
-                alt="user photo"
+                alt="user"
               />
             ) : (
-              /* Guest icon */
-              <div>
-                 <FaUserAlt />
-              </div>
-             
-
+              <FaUserAlt />
             )}
           </button>
 
@@ -67,25 +63,25 @@ export default function Navbar({ menu }) {
 
               <ul className="p-2 text-sm text-body font-medium">
 
-                {/* IF USER LOGGED IN */}
+                {/* USER LOGGED IN */}
                 {user ? (
                   <>
                     <li>
-                      <a
-                        href="/profile"
+                      <Link
+                        to="/profile"
                         className="inline-flex items-center w-full p-2 hover:bg-neutral-tertiary-medium hover:text-heading rounded"
                       >
                         Profile
-                      </a>
+                      </Link>
                     </li>
 
                     <li>
-                      <a
-                        href="/settings"
+                      <Link
+                        to="/settings"
                         className="inline-flex items-center w-full p-2 hover:bg-neutral-tertiary-medium hover:text-heading rounded"
                       >
                         Settings
-                      </a>
+                      </Link>
                     </li>
 
                     <li>
@@ -98,24 +94,23 @@ export default function Navbar({ menu }) {
                     </li>
                   </>
                 ) : (
-                  /* IF USER NOT LOGGED IN */
                   <>
                     <li>
-                      <a
-                        href="/login"
+                      <Link
+                        to="/login"
                         className="inline-flex items-center w-full p-2 hover:bg-neutral-tertiary-medium hover:text-heading rounded"
                       >
                         Login
-                      </a>
+                      </Link>
                     </li>
 
                     <li>
-                      <a
-                        href="/register"
+                      <Link
+                        to="/register"
                         className="inline-flex items-center w-full p-2 hover:bg-neutral-tertiary-medium hover:text-heading rounded"
                       >
                         Create Account
-                      </a>
+                      </Link>
                     </li>
                   </>
                 )}
@@ -124,7 +119,7 @@ export default function Navbar({ menu }) {
             </div>
           )}
 
-          {/* MOBILE MENU BUTTON (UNCHANGED) */}
+          {/* MOBILE MENU BUTTON */}
           <button
             data-collapse-toggle="navbar-user"
             type="button"
@@ -149,19 +144,21 @@ export default function Navbar({ menu }) {
 
         </div>
 
-        {/* NAV MENU (UNCHANGED) */}
+        {/* NAV MENU */}
         <div className="items-center justify-between hidden w-full md:flex md:w-auto md:order-1">
           <ul className="font-medium flex flex-col p-4 md:p-0 mt-4 border border-default rounded-base bg-neutral-secondary-soft md:flex-row md:space-x-8 rtl:space-x-reverse md:mt-0 md:border-0 md:bg-neutral-primary">
+
             {menu.map((item, index) => (
               <li key={index}>
-                <a
-                  href={item.href}
+                <Link
+                  to={item.href}
                   className="inline-flex items-center w-full p-2 hover:bg-neutral-tertiary-medium hover:text-heading rounded"
                 >
                   {item.label}
-                </a>
+                </Link>
               </li>
             ))}
+
           </ul>
         </div>
 
