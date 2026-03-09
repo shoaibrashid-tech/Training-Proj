@@ -3,11 +3,14 @@ import { useParams } from 'react-router-dom';
 import { StarIcon } from '@heroicons/react/20/solid'
 import Loading from '../components/Loading';
 import PrimaryButton from '../components/utiliy-comp/PrimaryButton';
+import { useDispatch } from 'react-redux';
+import { addToCart } from '../features/cart/cartSlice';
 
 export default function ProductPage() {
     const {id} = useParams();
     const [product, setProduct] = useState();
     const reviews = { href: '#', average: 4, totalCount: 117 }
+    const dispatch = useDispatch();
     const imageClasses = [
     "row-span-2 aspect-4/5 size-full object-cover sm:rounded-lg lg:aspect-3/4",
     "row-span-2 aspect-3/4 size-full rounded-lg object-cover max-lg:hidden",
@@ -15,22 +18,11 @@ export default function ProductPage() {
     "col-start-2 row-start-2 aspect-3/2 size-full rounded-lg object-cover max-lg:hidden",
     
     ];
-    const addToCart = () => {
-        const cart = JSON.parse(localStorage.getItem("cart")) || [];
-
-        const existingProduct = cart.find((item) => item.id === product.id);
-
-        if (existingProduct) {
-            existingProduct.quantity += 1;
-        } else {
-            cart.push({
-            ...product,
-            quantity: 1,
-            });
-        }
-
-        localStorage.setItem("cart", JSON.stringify(cart));
-        alert("Product added to cart");
+    const handleAddToCart = () => {
+      console.log(product);
+      dispatch(addToCart(product))
+      
+      alert("Product added to cart");
     };
     function classNames(...classes) {
     return classes.filter(Boolean).join(' ')
@@ -112,7 +104,7 @@ export default function ProductPage() {
             </div>
 
            <div className='mt-10'>
-                <PrimaryButton buttonText={"Add to Cart"} onClickHandler={addToCart} />
+                <PrimaryButton buttonText={"Add to Cart"} onClickHandler={handleAddToCart} />
            </div>
           </div>
 
