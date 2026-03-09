@@ -1,11 +1,29 @@
+import { Link } from "react-router-dom";
+import { useSelector } from "react-redux";
 import PrimaryButton from "./utiliy-comp/PrimaryButton";
 
 export default function OrderSummary() {
+
+  const cartItems = useSelector((state) => state.cart.itemList);
+
+  // Subtotal
+  const subtotal = cartItems.reduce((total, item) => {
+    return total + item.price * item.quantity;
+  }, 0);
+
+  // VAT (10%)
+  const vat = subtotal * 0.10;
+
+  // Shipping rule
+  const shipping = subtotal < 150 && subtotal > 0 ? 10 : 0;
+
+  // Final total
+  const total = subtotal + vat + shipping;
+
   return (
     <div className="mx-auto mt-6 max-w-4xl flex-1 space-y-6 lg:mt-0 lg:w-full">
 
-      {/* Order Summary */}
-      <div className="space-y-2 rounded-lg border border-gray-200 bg-white p-4 shadow-2xl shadow-black  sm:p-6">
+      <div className="space-y-2 rounded-lg border border-gray-200 bg-white p-4 shadow-2xl shadow-black sm:p-6">
         <p className="text-xl font-bold text-black">
           Order summary
         </p>
@@ -13,42 +31,45 @@ export default function OrderSummary() {
         <div className="space-y-4">
           <div className="space-y-2">
 
+            {/* Subtotal */}
             <dl className="flex items-center justify-between gap-4">
               <dt className="text-base font-normal text-black">
-                Original price
+                Subtotal
               </dt>
               <dd className="text-base font-medium text-black">
-                $7,592.00
+                ${subtotal.toFixed(2)}
               </dd>
             </dl>
 
-
+            {/* Shipping */}
             <dl className="flex items-center justify-between gap-4">
-              <dt className="text-base font-normal text-black ">
-                Store Pickup
+              <dt className="text-base font-normal text-black">
+                Shipping
               </dt>
               <dd className="text-base font-medium text-black">
-                $99
+                ${shipping.toFixed(2)}
               </dd>
             </dl>
 
+            {/* VAT */}
             <dl className="flex items-center justify-between gap-4">
               <dt className="text-base font-normal text-black">
-                Tax
+                VAT (10%)
               </dt>
               <dd className="text-base font-medium text-black">
-                $799
+                ${vat.toFixed(2)}
               </dd>
             </dl>
 
           </div>
 
-          <dl className="flex items-center justify-between gap-4 border-t border-gray-200 pt-2 dark:border-gray-700">
+          {/* Total */}
+          <dl className="flex items-center justify-between gap-4 border-t border-gray-200 pt-2">
             <dt className="text-base font-bold text-black">
               Total
             </dt>
-            <dd className="text-base font-bold text-white">
-              $8,191.00
+            <dd className="text-base font-bold text-black">
+              ${total.toFixed(2)}
             </dd>
           </dl>
         </div>
@@ -60,28 +81,14 @@ export default function OrderSummary() {
             or
           </span>
 
-          <a
-            href="/"
-            className="inline-flex items-center gap-2 text-sm font-medium text-primary-700 underline hover:no-underline"
+          <Link
+            to="/"
+            className="inline-flex items-center gap-2 text-sm font-medium text-blue-600 underline hover:no-underline"
           >
             Continue Shopping
-
-            <svg
-              className="h-5 w-5"
-              xmlns="http://www.w3.org/2000/svg"
-              fill="none"
-              viewBox="0 0 24 24"
-            >
-              <path
-                stroke="currentColor"
-                strokeLinecap="round"
-                strokeLinejoin="round"
-                strokeWidth="2"
-                d="M19 12H5m14 0-4 4m4-4-4-4"
-              />
-            </svg>
-          </a>
+          </Link>
         </div>
+
       </div>
     </div>
   );

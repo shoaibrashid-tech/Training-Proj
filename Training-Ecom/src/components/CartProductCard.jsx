@@ -1,69 +1,71 @@
 import React from 'react'
 import { useDispatch } from 'react-redux';
-import { removeFromCart } from '../features/cart/cartSlice';
+import { removeFromCart, increaseQuantity, decreaseQuantity } from '../features/cart/cartSlice';
 
 
-export default function CartProductCard({item}) {
+export default function CartProductCard({ item }) {
 
   const dispatch = useDispatch();
-  
+
   return (
-            <div
-              key={item.id}
-              className="rounded-lg border border-gray-200 bg-white p-4 shadow-2xl shadow-black md:p-6"
+    <div
+      key={item.id}
+      className="rounded-lg border border-gray-200 bg-white p-4 shadow-2xl shadow-black md:p-6"
+    >
+      <div className="space-y-4 md:flex md:items-center md:justify-between md:gap-6 md:space-y-0">
+
+        {/* Image */}
+        <a href="#" className="shrink-0 md:order-1">
+          <img
+            className="h-20 w-20 object-cover"
+            src={item.images?.[0]}
+            alt={item.title}
+          />
+        </a>
+
+        {/* Quantity */}
+        <div className="flex items-center justify-between md:order-3 md:justify-end">
+          <div className="flex items-center">
+
+            <button
+              className="inline-flex h-5 w-5 items-center justify-center rounded-md border bg-gray-100"
+              onClick={()=>dispatch(decreaseQuantity(item.id))}
             >
-              <div className="space-y-4 md:flex md:items-center md:justify-between md:gap-6 md:space-y-0">
+              -
+            </button>
 
-                {/* Image */}
-                <a href="#" className="shrink-0 md:order-1">
-                  <img
-                    className="h-20 w-20 object-cover"
-                    src={item.images?.[0]}
-                    alt={item.title}
-                  />
-                </a>
+            <span className="mx-2 text-sm font-medium text-black">
+              {item.quantity}
+            </span>
 
-                {/* Quantity */}
-                <div className="flex items-center justify-between md:order-3 md:justify-end">
-                  <div className="flex items-center">
+            <button
+              className="inline-flex h-5 w-5 items-center justify-center rounded-md border bg-gray-100"
+              onClick={()=>dispatch(increaseQuantity(item.id))}
+            >
+              +
+            </button>
 
-                    <button
-                      className="inline-flex h-5 w-5 items-center justify-center rounded-md border bg-gray-100"
-                    >
-                      -
-                    </button>
+          </div>
 
-                    <span className="mx-2 text-sm font-medium text-black">
-                      {item.quantity}
-                    </span>
+          <div className="ml-6 text-end md:w-32">
+            <p className="text-2xl font-bold text-black ">
+              ${item.price * item.quantity}
+            </p>
+          </div>
+        </div>
 
-                    <button
-                      className="inline-flex h-5 w-5 items-center justify-center rounded-md border bg-gray-100"
-                    >
-                      +
-                    </button>
+        {/* Title */}
+        <div className="w-full min-w-0 flex-1 space-y-2 md:order-2 md:max-w-md">
+          <p className="text-xl font-bold text-black ">
+            {item.title}
+          </p>
 
-                  </div>
+          <button onClick={() => dispatch(removeFromCart(item.id))} className="text-md underline font-bold text-red-700">
+            Remove
+          </button>
+        </div>
 
-                  <div className="ml-6 text-end md:w-32">
-                    <p className="text-2xl font-bold text-black ">
-                      ${item.price * item.quantity}
-                    </p>
-                  </div>
-                </div>
-
-                {/* Title */}
-                <div className="w-full min-w-0 flex-1 space-y-2 md:order-2 md:max-w-md">
-                  <p className="text-xl font-bold text-black ">
-                    {item.title}
-                  </p>
-
-                  <button onClick={()=>dispatch(removeFromCart(item.id))} className="text-md underline font-bold text-red-700">
-                    Remove
-                  </button>
-                </div>
-
-              </div>
-            </div>
+      </div>
+    </div>
   )
 }
