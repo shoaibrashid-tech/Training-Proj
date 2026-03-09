@@ -1,11 +1,12 @@
 import { Link } from "react-router-dom";
 import { useSelector } from "react-redux";
 import PrimaryButton from "./utiliy-comp/PrimaryButton";
+import { useNavigate } from "react-router-dom";
 
 export default function OrderSummary() {
 
   const cartItems = useSelector((state) => state.cart.itemList);
-
+  const navigate = useNavigate();
   // Subtotal
   const subtotal = cartItems.reduce((total, item) => {
     return total + item.price * item.quantity;
@@ -74,7 +75,9 @@ export default function OrderSummary() {
           </dl>
         </div>
 
-        <PrimaryButton buttonText={"Checkout"} />
+        <PrimaryButton buttonText={"Checkout"} onClickHandler={()=>{
+          navigate("/checkout")
+        }} />
 
         <div className="flex items-center justify-center gap-2">
           <span className="text-sm font-normal text-gray-500">
