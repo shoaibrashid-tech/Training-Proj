@@ -1,11 +1,14 @@
 import React, { useState } from "react";
 import { useNavigate } from "react-router-dom";
+import { useContext } from "react";
+import { AuthContext } from "../Utils/authContext";
 
 export default function Register() {
 
   const [name, setName] = useState("");
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
+  const {user} = useContext(AuthContext);
   const navigate = useNavigate();
     if(user){
         navigate("/")
