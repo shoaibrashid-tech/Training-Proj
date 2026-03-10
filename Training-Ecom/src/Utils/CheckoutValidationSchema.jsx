@@ -9,7 +9,10 @@ export const customerSchema = z.object({
     .toLowerCase()
     .email("Enter a valid email address")
     .max(100, "Email cannot exceed 100 characters"),
-
+  phone: z
+    .string()
+    .trim()
+    .regex(/^\d{10,15}$/, "Phone number must be 10–15 digits"),
   address: z
     .string()
     .trim()

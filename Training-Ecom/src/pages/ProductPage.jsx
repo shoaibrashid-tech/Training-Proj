@@ -5,24 +5,30 @@ import Loading from '../components/Loading';
 import PrimaryButton from '../components/utiliy-comp/PrimaryButton';
 import { useDispatch } from 'react-redux';
 import { addToCart } from '../features/cart/cartSlice';
+import { toast } from "react-toastify";
+import { useNavigate } from "react-router-dom";
 
 export default function ProductPage() {
     const {id} = useParams();
     const [product, setProduct] = useState();
     const reviews = { href: '#', average: 4, totalCount: 117 }
     const dispatch = useDispatch();
+    const navigate = useNavigate();
     const imageClasses = [
-    "row-span-2 aspect-4/5 size-full object-cover sm:rounded-lg lg:aspect-3/4",
     "row-span-2 aspect-3/4 size-full rounded-lg object-cover max-lg:hidden",
     "col-start-2 aspect-3/2 size-full rounded-lg object-cover max-lg:hidden",
     "col-start-2 row-start-2 aspect-3/2 size-full rounded-lg object-cover max-lg:hidden",
+    "row-span-2 aspect-4/5 size-full object-cover sm:rounded-lg lg:aspect-3/4"
     
     ];
     const handleAddToCart = () => {
       console.log(product);
       dispatch(addToCart(product))
       
-      alert("Product added to cart");
+      toast.success("Product Added to Cart")
+      setTimeout(() => {
+      navigate("/cart");
+    }, 1000);
     };
     function classNames(...classes) {
     return classes.filter(Boolean).join(' ')

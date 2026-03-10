@@ -11,6 +11,8 @@ import Register from './pages/Register';
 import getUserProfile from './Utils/AuthUtils';
 import ProtectedRoute from './Utils/ProtectedRoute';
 import CheckoutPage from './pages/CheckoutPage';
+import OrderSuccess from './pages/OrderSuccess';
+import { ToastContainer } from 'react-toastify';
 export default function App() {
 
   const navBarMenu = [
@@ -46,6 +48,15 @@ export default function App() {
         <div className="min-h-screen flex flex-col">
           
           <Navbar  menu={navBarMenu}/>
+          
+          <ToastContainer
+            position="top-right"
+            autoClose={1000}
+            hideProgressBar={false}
+            newestOnTop
+            closeOnClick
+            pauseOnHover
+          />
 
           <main className="flex-1">
             <Routes>
@@ -56,10 +67,13 @@ export default function App() {
               <Route path="/register" element={<Register />} />
 
               
-                <Route path="/checkout" element={
-                  <ProtectedRoute>
-                    <CheckoutPage />
-                  </ProtectedRoute>} />
+              <Route path="/checkout" element={
+                <ProtectedRoute>
+                  <CheckoutPage />
+                </ProtectedRoute>} 
+              />
+
+              <Route path="/order-success" element={<OrderSuccess />} />
               
             </Routes>
           </main>
