@@ -2,6 +2,7 @@ import React, { useState } from "react";
 import { useNavigate } from "react-router-dom";
 import { useContext } from "react";
 import { AuthContext } from "../Utils/authContext";
+import { toast } from "react-toastify";
 
 export default function Register() {
 
@@ -32,14 +33,19 @@ export default function Register() {
 
       if (!response.ok) {
         throw new Error(`Http Response: ${response.status}`);
+        toast.error("Unable to Create Account");
       }
 
       const responseData = await response.json();
-      console.log(responseData);
-      navigate("/login");
+      toast.success("Account Created")
+      setTimeout(()=>{
+        navigate("/login");
+      }, 1000)
+      
 
     } catch (error) {
       console.error(error.message);
+      toast.error("Unexpected Error");
     }
   };
 
