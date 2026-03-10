@@ -1,121 +1,87 @@
-import { useState, useEffect } from "react";
+import { useState } from "react";
+import { useQuery } from "@tanstack/react-query";
 import ProductCard from "../components/ProductCard";
 import Loading from "../components/Loading";
 import SearchFilter from "../components/utiliy-comp/Filters_Generic/SearchFilter";
 import DropDownFilter from "../components/utiliy-comp/Filters_Generic/DropDownFilter";
 import RangeFilter from "../components/utiliy-comp/Filters_Generic/RangeFilter";
 import MainPageHeroSection from "../components/MainPageHeroSection";
+import { getProducts } from "../services/ProductService";
 
 function Home() {
 
   const min = 10;
   const max = 30000;
 
-  const [products, setProducts] = useState([]);
   const [categories, setCategories] = useState([]);
 
   const [filter, setFilter] = useState("");
   const [selectedCategory, setSelectedCategory] = useState(null);
   const [range, setRange] = useState([min, max]);
 
-  const [loading, setLoading] = useState(true);
+  const buildParams = () => {
 
-  async function fetchProducts(newFilter, newRange, category) {
+    const params = {
+      offset: 0,
+      limit: 50,
+    };
 
-    const base = "https://api.escuelajs.co/api/v1/products";
-
-    const params = new URLSearchParams();
-    params.append("offset", 0);
-    params.append("limit", 50);
-
-    if (newFilter) {
-      params.append("title", newFilter);
+    if (filter) {
+      params.title = filter;
     }
 
-    if (newRange && (newRange[0] > min || newRange[1] < max)) {
-      params.append("price_min", newRange[0]);
-      params.append("price_max", newRange[1]);
+    if (range && (range[0] > min || range[1] < max)) {
+      params.price_min = range[0];
+      params.price_max = range[1];
     }
 
-    if (category) {
-      params.append("categoryId", category);
+    if (selectedCategory) {
+      params.categoryId = selectedCategory;
     }
 
-    const link = `${base}?${params.toString()}`;
+    return params;
+  };
 
-    try {
-      setLoading(true);
+  const { data: products = [], isLoading } = useQuery({
+    queryKey: ["products", filter, range, selectedCategory],
+    queryFn: async () => {
 
-      const response = await fetch(link);
-      const data = await response.json();
+      const data = await getProducts(buildParams());
+      if(categories.length === 0){
+        const uniqueCategories = [
+          ...new Map(
+            data.map(p => [p.category.id, p.category])
+          ).values()
+        ];
 
-      setProducts(data);
+        const categoryItems = uniqueCategories.map(cat => ({
+          key: cat.id,
+          label: cat.name
+        }));
 
-    } catch (error) {
-      console.error(error);
-    } finally {
-      setLoading(false);
-    }
-  }
-
-  async function getProducts() {
-
-    const link = "https://api.escuelajs.co/api/v1/products?offset=0&limit=50";
-
-    try {
-      setLoading(true);
-
-      const response = await fetch(link);
-      const data = await response.json();
-
-      setProducts(data);
-
-      const uniqueCategories = [
-        ...new Map(
-          data.map(p => [p.category.id, p.category])
-        ).values()
-      ];
-
-      const categoryItems = uniqueCategories.map(cat => ({
-        key: cat.id,
-        label: cat.name
-      }));
-
+        setCategories(categoryItems);
+      }
       
 
-      setCategories(categoryItems);
-
-    } catch (error) {
-      console.error(error);
-    } finally {
-      setLoading(false);
+      return data;
     }
-  }
+  });
 
   const handleSearch = (value) => {
     setFilter(value);
-    fetchProducts(value, range, selectedCategory);
   };
 
   const handleRangeChange = (value) => {
     setRange(value);
-    fetchProducts(filter, value, selectedCategory);
   };
 
   const handleCategoryChange = (key) => {
     setSelectedCategory(key);
-    fetchProducts(filter, range, key);
   };
-
-  useEffect(() => {
-    getProducts();
-  }, []);
 
   return (
 
     <div>
-
-
 
       {/* Filters */}
       <div className="w-full h-20 px-25 flex justify-between items-center">
@@ -149,7 +115,7 @@ function Home() {
 
       {/* Products */}
 
-      {!loading ? (
+      {!isLoading ? (
 
         <div className="flex justify-center">
           <div className="grid grid-cols-1 sm:grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-4 p-4">

@@ -12,6 +12,7 @@ import getUserProfile from './Utils/AuthUtils';
 import ProtectedRoute from './Utils/ProtectedRoute';
 import CheckoutPage from './pages/CheckoutPage';
 import OrderSuccess from './pages/OrderSuccess';
+
 import { ToastContainer } from 'react-toastify';
 export default function App() {
 
@@ -44,6 +45,7 @@ export default function App() {
 
 }, []);
   return (
+
       <BrowserRouter>
         <div className="min-h-screen flex flex-col">
           
