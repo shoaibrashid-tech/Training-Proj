@@ -8,11 +8,18 @@ import RangeFilter from "../components/utiliy-comp/Filters_Generic/RangeFilter";
 //import MainPageHeroSection from "../components/MainPageHeroSection";
 import { CiFilter } from "react-icons/ci";
 import { getProducts } from "../services/ProductService";
+import { useSearchParams } from "react-router-dom";
+import { Pagination } from "antd";
 
 function Home() {
 
+  const [searchParams, setSearchParams] = useSearchParams();
+
+  const page = parseInt(searchParams.get("page")) || 1;
+  const limit = 48;
+
   const min = 10;
-  const max = 30000;
+  const max = 1000;
 
   const [categories, setCategories] = useState([]);
   const [showMobileFilters, setShowMobileFilters] = useState(false);
@@ -24,8 +31,8 @@ function Home() {
   const buildParams = () => {
 
     const params = {
-      offset: 0,
-      limit: 50,
+      offset: (page - 1) * limit,
+      limit: limit,
     };
 
     if (filter) {
@@ -45,7 +52,7 @@ function Home() {
   };
 
   const { data: products = [], isLoading } = useQuery({
-    queryKey: ["products", filter, range, selectedCategory],
+    queryKey: ["products", page, filter, range, selectedCategory],
     queryFn: async () => {
 
       const data = await getProducts(buildParams());
@@ -68,6 +75,11 @@ function Home() {
       return data;
     }
   });
+
+  const changePage = (page) => {
+    setSearchParams({ page });
+    window.scrollTo({ top: 0, behavior: "smooth" });
+  };
 
   const handleSearch = (value) => {
     setFilter(value);
@@ -141,18 +153,54 @@ function Home() {
 
       {/* Products */}
       {!isLoading ? (
-        <div className="grid grid-cols-1 sm:grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-4 pb-8">
-          {products.map((product) => (
-            <ProductCard
-              key={product.id}
-              product={product}
+        <div>
+
+          {products.length === 0 ? (
+
+            <div className="flex flex-col items-center justify-center py-24 text-center">
+              <div className="text-5xl mb-4">🔍</div>
+
+              <h2 className="text-2xl font-semibold text-gray-800">
+                No Products Found
+              </h2>
+
+              <p className="text-gray-500 mt-2">
+                Try adjusting your search or filters.
+              </p>
+            </div>
+
+          ) : (
+
+            <div className="grid grid-cols-1 sm:grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-4 pb-8">
+              {products.map((product) => (
+                <ProductCard
+                  key={product.id}
+                  product={product}
+                />
+              ))}
+            </div>
+
+          )}
+
+          {/* Pagination always visible */}
+          <div className="flex justify-center py-10">
+            <Pagination
+              align="center"
+              current={page}
+              pageSize={48}
+              total={1000}
+              onChange={changePage}
             />
-          ))}
+          </div>
+
         </div>
+
       ) : (
+
         <div className="w-full h-screen flex justify-center items-center">
           <Loading />
         </div>
+
       )}
 
     </div>
