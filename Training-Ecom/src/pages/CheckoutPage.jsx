@@ -312,7 +312,7 @@ export default function CheckoutPage() {
                   }`}
                 >
                   <span>{item.label}</span>
-                  <span>{item.value}</span>
+                  <span>$ {item.value}</span>
                 </div>
               ))}
 

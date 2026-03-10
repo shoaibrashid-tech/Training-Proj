@@ -14,112 +14,112 @@ export default function Navbar({ menu }) {
 
         {/* LOGO */}
         <Link to="/" className="flex items-center space-x-3 rtl:space-x-reverse">
-          <img
-            src="https://flowbite.com/docs/images/logo.svg"
-            className="h-7"
-            alt="Flowbite Logo"
-          />
-          <span className="self-center text-xl text-heading font-semibold whitespace-nowrap">
-            Flowbite
+          
+          <span className="self-center text-2xl text-heading font-semibold whitespace-nowrap">
+            MyStore
           </span>
         </Link>
 
         <div className="flex items-center md:order-2 space-x-3 md:space-x-0 rtl:space-x-reverse">
 
-          {/* USER BUTTON */}
-          <button
-            type="button"
-            onClick={() => setOpen(!open)}
-            className="flex text-sm bg-neutral-primary rounded-full p-4 md:me-0 focus:ring-2 focus:ring-neutral-tertiary"
-          >
-            <span className="sr-only">Open user menu</span>
+          {/* USER MENU WRAPPER */}
+          <div className="relative">
 
-            {user ? (
-              <img
-                className="w-8 h-8 rounded-full"
-                src={user.photo || me}
-                alt="user"
-              />
-            ) : (
-              <FaUserAlt />
-            )}
-          </button>
+            {/* USER BUTTON */}
+            <button
+              type="button"
+              onClick={() => setOpen(!open)}
+              className="flex text-sm bg-neutral-primary rounded-full p-4 md:me-0 focus:ring-2 focus:ring-neutral-tertiary"
+            >
+              <span className="sr-only">Open user menu</span>
 
-          {/* DROPDOWN */}
-          {open && (
-            <div className="absolute right-4 top-14 z-50 bg-neutral-primary-medium border border-default-medium rounded-base shadow-lg w-44">
-
-              {/* USER INFO */}
-              {user && (
-                <div className="px-4 py-3 text-sm border-b border-default">
-                  <span className="block text-heading font-medium">
-                    {user.name}
-                  </span>
-                  <span className="block text-body truncate">
-                    {user.email}
-                  </span>
-                </div>
+              {user ? (
+                <img
+                  className="w-8 h-8 rounded-full"
+                  src={user.photo || me}
+                  alt="user"
+                />
+              ) : (
+                <FaUserAlt />
               )}
+            </button>
 
-              <ul className="p-2 text-sm text-body font-medium">
+            {/* DROPDOWN */}
+            {open && (
+              <div className="absolute top-full right-0 mt-6 z-50 bg-neutral-primary-medium border border-default-medium rounded-base shadow-lg w-44">
 
-                {/* USER LOGGED IN */}
-                {user ? (
-                  <>
-                    <li>
-                      <Link
-                        to="/profile"
-                        className="inline-flex items-center w-full p-2 hover:bg-neutral-tertiary-medium hover:text-heading rounded"
-                      >
-                        Profile
-                      </Link>
-                    </li>
-
-                    <li>
-                      <Link
-                        to="/settings"
-                        className="inline-flex items-center w-full p-2 hover:bg-neutral-tertiary-medium hover:text-heading rounded"
-                      >
-                        Settings
-                      </Link>
-                    </li>
-
-                    <li>
-                      <button
-                        onClick={logout}
-                        className="inline-flex items-center w-full p-2 hover:bg-neutral-tertiary-medium hover:text-heading rounded"
-                      >
-                        Logout
-                      </button>
-                    </li>
-                  </>
-                ) : (
-                  <>
-                    <li>
-                      <Link
-                        to="/login"
-                        className="inline-flex items-center w-full p-2 hover:bg-neutral-tertiary-medium hover:text-heading rounded"
-                      >
-                        Login
-                      </Link>
-                    </li>
-
-                    <li>
-                      <Link
-                        to="/register"
-                        className="inline-flex items-center w-full p-2 hover:bg-neutral-tertiary-medium hover:text-heading rounded"
-                      >
-                        Create Account
-                      </Link>
-                    </li>
-                  </>
+                {/* USER INFO */}
+                {user && (
+                  <div className="px-4 py-3 text-sm border-b border-default">
+                    <span className="block text-heading font-medium">
+                      {user.name}
+                    </span>
+                    <span className="block text-body truncate">
+                      {user.email}
+                    </span>
+                  </div>
                 )}
 
-              </ul>
-            </div>
-          )}
+                <ul className="p-2 text-sm text-body font-medium">
 
-          {/* MOBILE MENU BUTTON */}
+                  {/* USER LOGGED IN */}
+                  {user ? (
+                    <>
+                      <li>
+                        <Link
+                          to="/profile"
+                          className="inline-flex items-center w-full p-2 hover:bg-neutral-tertiary-medium hover:text-heading rounded"
+                        >
+                          Profile
+                        </Link>
+                      </li>
+
+                      <li>
+                        <Link
+                          to="/settings"
+                          className="inline-flex items-center w-full p-2 hover:bg-neutral-tertiary-medium hover:text-heading rounded"
+                        >
+                          Settings
+                        </Link>
+                      </li>
+
+                      <li>
+                        <button
+                          onClick={logout}
+                          className="inline-flex items-center w-full p-2 hover:bg-neutral-tertiary-medium hover:text-heading rounded"
+                        >
+                          Logout
+                        </button>
+                      </li>
+                    </>
+                  ) : (
+                    <>
+                      <li>
+                        <Link
+                          to="/login"
+                          className="inline-flex items-center w-full p-2 hover:bg-neutral-tertiary-medium hover:text-heading rounded"
+                        >
+                          Login
+                        </Link>
+                      </li>
+
+                      <li>
+                        <Link
+                          to="/register"
+                          className="inline-flex items-center w-full p-2 hover:bg-neutral-tertiary-medium hover:text-heading rounded"
+                        >
+                          Create Account
+                        </Link>
+                      </li>
+                    </>
+                  )}
+
+                </ul>
+              </div>
+            )}
+
+          </div>
+
           <button
             data-collapse-toggle="navbar-user"
             type="button"
@@ -144,7 +144,6 @@ export default function Navbar({ menu }) {
 
         </div>
 
-        {/* NAV MENU */}
         <div className="items-center justify-between hidden w-full md:flex md:w-auto md:order-1">
           <ul className="font-medium flex flex-col p-4 md:p-0 mt-4 border border-default rounded-base bg-neutral-secondary-soft md:flex-row md:space-x-8 rtl:space-x-reverse md:mt-0 md:border-0 md:bg-neutral-primary">
 

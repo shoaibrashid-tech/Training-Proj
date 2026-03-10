@@ -1,47 +1,44 @@
-import React, { useState, useRef } from 'react';
-import { DownOutlined } from '@ant-design/icons';
-import { Dropdown } from 'antd';
+import React, { useState, useRef } from "react";
+import { DownOutlined } from "@ant-design/icons";
+import { Dropdown } from "antd";
 
-export default function DropDownFilter({ items, selectedKeys, setSelectedKeys }) {
-    const [open, setOpen] = useState(false);
-    const debounceRef = useRef(null);
+export default function DropDownFilter({ items, selectedKey, setSelectedKey }) {
+  const [open, setOpen] = useState(false);
+  const debounceRef = useRef(null);
 
-    const handleMenuClick = (e) => {
-        clearTimeout(debounceRef.current);
+  const handleMenuClick = ({ key }) => {
+    clearTimeout(debounceRef.current);
 
-        debounceRef.current = setTimeout(() => {
-            setSelectedKeys(e.selectedKeys);
-        }, 400); // debounce delay
-    };
+    debounceRef.current = setTimeout(() => {
+      setSelectedKey(Number(key));
+      setOpen(false);
+    }, 400);
+  };
 
-    const handleOpenChange = (nextOpen, info) => {
-        if (info.source === 'trigger' || nextOpen) {
-            setOpen(nextOpen);
-        }
-    };
+  const handleOpenChange = (nextOpen) => {
+    setOpen(nextOpen);
+  };
 
-    return (
-        <div className="h-10 w-full flex justify-center items-center border-2 border-blue-500 rounded-md">
-            <Dropdown
-                menu={{
-                    items,
-                    selectable: true,
-                    multiple: true,
-                    selectedKeys: selectedKeys,
-                    onSelect: handleMenuClick,
-                    onDeselect: handleMenuClick,
-                }}
-                onOpenChange={handleOpenChange}
-                open={open}
-            >
-                <a
-                    onClick={e => e.preventDefault()}
-                    className="flex items-center justify-between w-full p-5 text-blue-500"
-                >
-                    <span>Category</span>
-                    <DownOutlined />
-                </a>
-            </Dropdown>
-        </div>
-    );
+  const selectedItem = items.find((item) => item.key === selectedKey);
+
+  return (
+    <div className="h-10 w-full flex justify-center items-center border-2 border-blue-500 rounded-md">
+      <Dropdown
+        menu={{
+          items,
+          onClick: handleMenuClick,
+        }}
+        open={open}
+        onOpenChange={handleOpenChange}
+      >
+        <a
+          onClick={(e) => e.preventDefault()}
+          className="flex items-center justify-between w-full p-5 text-blue-500"
+        >
+          <span>{selectedItem ? selectedItem.label : "Category"}</span>
+          <DownOutlined />
+        </a>
+      </Dropdown>
+    </div>
+  );
 }
