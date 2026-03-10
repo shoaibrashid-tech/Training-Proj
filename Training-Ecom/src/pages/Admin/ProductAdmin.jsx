@@ -60,19 +60,21 @@ export default function ProductAdmin() {
                 </div>
         
               </div>
-        <InfiniteList
-            queryKey={["products"]}
-            queryFn={getProducts}
-            renderItem={(product) => (
+          <div className="w-full h-[1000px] overflow-auto">
+            <InfiniteList
+              queryKey={["products"]}
+              queryFn={getProducts}
+              renderItem={(product) => (
                 <List.Item key={product.id}>
-                <List.Item.Meta
+                  <List.Item.Meta
                     avatar={<Avatar src={product.images?.[0]} />}
                     title={product.title}
                     description={`$${product.price}`}
-                />
+                  />
                 </List.Item>
-            )}
-    />
+              )}
+            />
+          </div>
 
     </div>
     
