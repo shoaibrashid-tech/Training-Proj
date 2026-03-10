@@ -292,7 +292,7 @@ export default function CheckoutPage() {
                 setOpen={setOpen}
                 title={"Confirm Payment"}
                 description={"Are you sure you want to continue with the payment"}
-                onConfirm={onConfirm={handleConfirmPayment}}
+                onConfirm={handleConfirmPayment}
               />
             )}
 
@@ -312,7 +312,7 @@ export default function CheckoutPage() {
                   }`}
                 >
                   <span>{item.label}</span>
-                  <span>$ {item.value}</span>
+                  <span>$ {Number(item.value).toFixed(1)}</span>
                 </div>
               ))}
 
