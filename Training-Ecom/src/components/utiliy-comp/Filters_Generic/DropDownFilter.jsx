@@ -6,11 +6,21 @@ export default function DropDownFilter({ items, selectedKey, setSelectedKey }) {
   const [open, setOpen] = useState(false);
   const debounceRef = useRef(null);
 
+  // Add "All" option
+  const menuItems = [
+    { key: "all", label: "All" },
+    ...items,
+  ];
+
   const handleMenuClick = ({ key }) => {
     clearTimeout(debounceRef.current);
 
     debounceRef.current = setTimeout(() => {
-      setSelectedKey(Number(key));
+      if (key === "all") {
+        setSelectedKey(null);
+      } else {
+        setSelectedKey(Number(key));
+      }
       setOpen(false);
     }, 400);
   };
@@ -19,13 +29,16 @@ export default function DropDownFilter({ items, selectedKey, setSelectedKey }) {
     setOpen(nextOpen);
   };
 
-  const selectedItem = items.find((item) => item.key === selectedKey);
+  const selectedItem =
+    selectedKey === null
+      ? { label: "All" }
+      : items.find((item) => item.key === selectedKey);
 
   return (
     <div className="h-10 w-full flex justify-center items-center border-2 border-blue-500 rounded-md">
       <Dropdown
         menu={{
-          items,
+          items: menuItems,
           onClick: handleMenuClick,
         }}
         open={open}

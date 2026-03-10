@@ -81,6 +81,8 @@ function Home() {
         label: cat.name
       }));
 
+      
+
       setCategories(categoryItems);
 
     } catch (error) {
