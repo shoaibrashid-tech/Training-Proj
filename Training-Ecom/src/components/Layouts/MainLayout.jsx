@@ -8,7 +8,7 @@ export default function MainLayout({ menu }) {
 
       <Navbar menu={menu} />
 
-      <main className="flex-1">
+      <main className="flex-1 w-full">
         <Outlet />
       </main>
 
