@@ -3,6 +3,7 @@ import { useNavigate } from 'react-router-dom';
 import getUserProfile from '../Utils/AuthUtils';
 import { useContext } from "react";
 import { AuthContext } from '../Utils/authContext';
+import api from '../api/axiosInstance';
 export default function Login() {
 
   const [email, setEmail] = useState("");
@@ -17,26 +18,16 @@ export default function Login() {
     const sendLogin = async (e)=>{
         e.preventDefault();
         try{
-            const response = await fetch(`https://api.escuelajs.co/api/v1/auth/login`, {
-                method: "POST",
-                headers: {
-                    "Content-Type": "application/json",
-                },
-                body: JSON.stringify({
+            const response = await api.post(`https://api.escuelajs.co/api/v1/auth/login`, {
                     email: email,
                     password: password
-                })
+                
             });
-            if(!response.ok){
-                throw new Error(`Https Response: ${response.status}`)
-            }
-            const responseData = await response.json();
-            console.log(responseData);
-            if(responseData?.access_token){
-                for(let i in responseData){
-                   localStorage.setItem(i, responseData[i]); 
+            if(response.data?.access_token){
+                for(let i in response.data){
+                   localStorage.setItem(i, response.data[i]); 
                 }
-                const user = await getUserProfile(responseData.access_token);
+                const user = await getUserProfile(response.data.access_token);
                 login(user);
                 //console.log(user);
                 navigate(-1)

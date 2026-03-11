@@ -3,6 +3,7 @@ import { useNavigate } from "react-router-dom";
 import { useContext } from "react";
 import { AuthContext } from "../Utils/authContext";
 import { toast } from "react-toastify";
+import api from "../api/axiosInstance";
 
 export default function Register() {
 
@@ -15,39 +16,29 @@ export default function Register() {
         navigate("/")
     }
   const RegisterUser = async (e) => {
-    e.preventDefault();
+  e.preventDefault();
 
-    try {
-      const response = await fetch(`https://api.escuelajs.co/api/v1/users/`, {
-        method: "POST",
-        headers: {
-          "Content-Type": "application/json",
-        },
-        body: JSON.stringify({
-          name: name,
-          email: email,
-          password: password,
-          avatar: "https://i.pravatar.cc/300"
-        }),
-      });
+  try {
+    const response = await api.post("/users/", {
+      name,
+      email,
+      password,
+      avatar: "https://i.pravatar.cc/300"
+    });
 
-      if (!response.ok) {
-        throw new Error(`Http Response: ${response.status}`);
-        toast.error("Unable to Create Account");
-      }
+    console.log(response.data);
 
-      const responseData = await response.json();
-      toast.success("Account Created")
-      setTimeout(()=>{
-        navigate("/login");
-      }, 1000)
-      
+    toast.success("Account Created");
 
-    } catch (error) {
-      console.error(error.message);
-      toast.error("Unexpected Error");
-    }
-  };
+    setTimeout(() => {
+      navigate("/login");
+    }, 1000);
+
+  } catch (error) {
+    console.error(error.response?.data || error.message);
+    toast.error("Unable to Create Account");
+  }
+};
 
   return (
     <div className="flex min-h-full flex-col justify-center px-6 py-12 lg:px-8">

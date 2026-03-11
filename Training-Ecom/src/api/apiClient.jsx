@@ -1,3 +1,5 @@
+import axios from "axios";
+
 const BASE_URL = import.meta.env.VITE_API_BASE_URL || "https://api.escuelajs.co/api/v1";
 
 const buildQuery = (params) => {
@@ -70,3 +72,4 @@ export const api = {
       params,
     }),
 };
+
