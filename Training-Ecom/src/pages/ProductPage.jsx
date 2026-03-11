@@ -8,6 +8,8 @@ import { addToCart } from '../features/cart/cartSlice';
 import { toast } from "react-toastify";
 import { useNavigate } from "react-router-dom";
 import { useQuery } from "@tanstack/react-query";
+import api from '../api/axiosInstance';
+
 
 export default function ProductPage() {
 
@@ -40,14 +42,9 @@ export default function ProductPage() {
   }
 
   const fetchProduct = async () => {
-
-    const response = await fetch(`https://api.escuelajs.co/api/v1/products/${id}`);
-
-    if (!response.ok) {
-      throw new Error(`Https Response: ${response.status}`)
-    }
-
-    return response.json();
+    const response = await api.get(`/products/${id}`);
+    console.log(response.data);
+    return response.data;
   };
 
   const { data: product, isLoading } = useQuery({
