@@ -4,4 +4,5 @@ export const API_ENDPOINTS = {
   USERS: "/users",
   PRODUCTS: "/products",
   PRODUCT_BY_ID: (id) => `/products/${id}`,
+  CATEGORIES: "/categories"
 };

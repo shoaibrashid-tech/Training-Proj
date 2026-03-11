@@ -16,7 +16,7 @@ const getUserProfile = async (token) => {
 
     const userData = await response.json();
 
-    console.log(userData);
+    //console.log(userData);
 
     localStorage.setItem("user", JSON.stringify(userData));
 
