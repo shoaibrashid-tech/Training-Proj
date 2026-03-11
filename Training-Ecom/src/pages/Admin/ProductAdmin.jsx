@@ -4,7 +4,7 @@ import { List, Avatar, message } from "antd";
 import { toast } from "react-toastify";
 
 import InfiniteList from "../../components/InfiniteList";
-import { getProducts, addProductGraphQL, getCategories, removeProductGraphQL } from "../../services/ProductService";
+import { getProducts, addProduct, getCategories, removeProduct } from "../../services/ProductService";
 
 import SearchFilter from "../../components/utiliy-comp/Filters_Generic/SearchFilter";
 import DropDownFilter from "../../components/utiliy-comp/Filters_Generic/DropDownFilter";
@@ -37,8 +37,8 @@ export default function ProductAdmin() {
 
   // ---------------- TanStack Mutation (GraphQL) ----------------
 
-  const { mutate: addProduct, isPending: addloading } = useMutation({
-    mutationFn: addProductGraphQL,
+  const { mutate: addProductHandle, isPending: addloading } = useMutation({
+    mutationFn: addProduct,
 
     onSuccess: () => {
 
@@ -67,8 +67,8 @@ export default function ProductAdmin() {
   });
 
 
-  const removeProduct = useMutation({
-    mutationFn: removeProductGraphQL,
+  const removeProductHandle = useMutation({
+    mutationFn: removeProduct,
 
     onMutate: async (productID) => {
 
@@ -94,23 +94,23 @@ export default function ProductAdmin() {
 
       return { previousProducts };
     },
+
+    onError: (error, variables, context) => {
+
+      if (!context) return;
+
+      context.previousProducts.forEach(([queryKey, data]) => {
+        queryClient.setQueryData(queryKey, data);
+      });
+
+      message.error("Delete Failed");
+      toast.error("Delete Failed");
+    },
+
     onSuccess: () => {
       toast.success("Deleted Successfully");
     },
 
-    onError: (err, productid, context) => {
-
-      queryClient.setQueryData(["products"], context.previousProducts);
-
-      message.error("Delete Failed")
-
-      toast.error("Delete Failed");
-
-    },
-
-    onSettled: () => {
-      queryClient.invalidateQueries({ queryKey: ["products"] });
-    }
   });
 
   // ---------------- Filters ----------------
@@ -133,7 +133,7 @@ export default function ProductAdmin() {
 
     setFormError(null);
 
-    addProduct(productData);
+    addProductHandle(productData);
 
   };
 
@@ -213,7 +213,7 @@ export default function ProductAdmin() {
                 actions={[
                   <span
                     key="delete"
-                    onClick={() => removeProduct.mutate(product.id)}
+                    onClick={() => removeProductHandle.mutate(product.id)}
                     className="text-red-600 underline cursor-pointer hover:text-red-800"
                   >
                     Delete
