@@ -41,3 +41,13 @@ export const addProductGraphQL = (data) => {
 
   return graphqlRequest(mutation, data);
 };
+
+export const removeProductGraphQL = (id) => {
+  const mutation = `
+    mutation DeleteProduct($id: ID!) {
+      deleteProduct(id: $id)
+    }
+  `;
+
+  return graphqlRequest(mutation, { id });
+};

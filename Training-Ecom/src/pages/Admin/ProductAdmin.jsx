@@ -1,8 +1,10 @@
 import React, { useState } from "react";
 import { List, Avatar, message } from "antd";
 
+import { toast } from "react-toastify";
+
 import InfiniteList from "../../components/InfiniteList";
-import { getProducts, addProductGraphQL, getCategories } from "../../services/ProductService";
+import { getProducts, addProductGraphQL, getCategories, removeProductGraphQL } from "../../services/ProductService";
 
 import SearchFilter from "../../components/utiliy-comp/Filters_Generic/SearchFilter";
 import DropDownFilter from "../../components/utiliy-comp/Filters_Generic/DropDownFilter";
@@ -35,7 +37,7 @@ export default function ProductAdmin() {
 
   // ---------------- TanStack Mutation (GraphQL) ----------------
 
-  const { mutate: addProduct, isPending: loading } = useMutation({
+  const { mutate: addProduct, isPending: addloading } = useMutation({
     mutationFn: addProductGraphQL,
 
     onSuccess: () => {
@@ -47,6 +49,7 @@ export default function ProductAdmin() {
       });
 
       setAddingProduct(false);
+      toast.success("Successfully Added Product");
 
     },
 
@@ -60,6 +63,53 @@ export default function ProductAdmin() {
 
       message.error("Failed to add product");
 
+    }
+  });
+
+
+  const removeProduct = useMutation({
+    mutationFn: removeProductGraphQL,
+
+    onMutate: async (productID) => {
+
+      await queryClient.cancelQueries({ queryKey: ["products"] });
+
+      const previousProducts = queryClient.getQueriesData({
+        queryKey: ["products"]
+      });
+
+      queryClient.setQueriesData(
+        { queryKey: ["products"] },
+        (old) => {
+          if (!old) return old;
+
+          return {
+            ...old,
+            pages: old.pages.map((page) =>
+              page.filter((p) => p.id !== productID)
+            ),
+          };
+        }
+      );
+
+      return { previousProducts };
+    },
+    onSuccess: () => {
+      toast.success("Deleted Successfully");
+    },
+
+    onError: (err, productid, context) => {
+
+      queryClient.setQueryData(["products"], context.previousProducts);
+
+      message.error("Delete Failed")
+
+      toast.error("Delete Failed");
+
+    },
+
+    onSettled: () => {
+      queryClient.invalidateQueries({ queryKey: ["products"] });
     }
   });
 
@@ -86,6 +136,8 @@ export default function ProductAdmin() {
     addProduct(productData);
 
   };
+
+  
 
   // ---------------- Filters Object ----------------
 
@@ -156,13 +208,24 @@ export default function ProductAdmin() {
             })
           }
           renderItem={(product) => (
-            <List.Item key={product.id}>
-              <List.Item.Meta
-                avatar={<Avatar src={product.images?.[0]} />}
-                title={product.title}
-                description={`$${product.price}`}
-              />
-            </List.Item>
+            <List.Item
+                key={product.id}
+                actions={[
+                  <span
+                    key="delete"
+                    onClick={() => removeProduct.mutate(product.id)}
+                    className="text-red-600 underline cursor-pointer hover:text-red-800"
+                  >
+                    Delete
+                  </span>
+                ]}
+              >
+                <List.Item.Meta
+                  avatar={<Avatar src={product.images?.[0]} />}
+                  title={product.title}
+                  description={`$${product.price}`}
+                />
+              </List.Item>
           )}
         />
 
@@ -176,7 +239,7 @@ export default function ProductAdmin() {
           setOpen={setAddingProduct}
           categories={categories}
           onConfirm={handleAddProduct}
-          confirmLoading={loading}
+          confirmLoading={addloading}
           error={formError}
         />
       )}
