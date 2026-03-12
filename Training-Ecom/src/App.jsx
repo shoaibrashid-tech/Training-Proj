@@ -75,7 +75,9 @@ export default function App() {
           <Route path="/login" element={<Login />} />
           <Route path="/register" element={<Register />} />
           <Route path="/checkout" element={
-            <Suspense fallback={<Loading />}>
+            <Suspense fallback={<div className="w-full h-screen flex justify-center items-center">
+                                  <Loading />
+                                </div>}>
               <ProtectedRoute><CheckoutPage /></ProtectedRoute>
             </Suspense>
           } />
@@ -84,7 +86,9 @@ export default function App() {
 
         <Route path="/admin/*" element={
           <ProtectedRoute adminCheck={true}>
-            <Suspense fallback={<Loading />}>
+            <Suspense fallback={<div className="w-full h-screen flex justify-center items-center">
+                                  <Loading />
+                                </div>}>
               <AdminLayout />
             </Suspense>
           </ProtectedRoute>
