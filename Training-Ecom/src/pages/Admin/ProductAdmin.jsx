@@ -18,7 +18,6 @@ export default function ProductAdmin() {
   const limit = 48;
   const queryClient = useQueryClient();
 
-
   const [page, setPage] = useState(1);
   const [filter, setFilter] = useState("");
   const [selectedCategory, setSelectedCategory] = useState(null);
@@ -42,8 +41,6 @@ export default function ProductAdmin() {
   };
 
   const currentQueryKey = ["products", page, filter, range, selectedCategory];
-
-
 
   const { mutate: addProductHandle, isPending: addloading } = useMutation({
     mutationFn: addProduct,
@@ -82,8 +79,6 @@ export default function ProductAdmin() {
     },
   });
 
-
-
   const handleSearch = (value) => {
     setFilter(value);
     setPage(1);
@@ -100,18 +95,18 @@ export default function ProductAdmin() {
   };
 
   return (
-    <div className="flex flex-col h-full w-full p-4 space-y-4 overflow-hidden">
+    // Responsive padding: p-2 on mobile, p-4 on md screens and up
+    <div className="flex flex-col h-full w-full p-2 md:p-4 space-y-4 overflow-hidden">
       
-
-      <div className="flex flex-wrap md:flex-nowrap gap-4 items-center bg-white p-4 rounded-lg shadow-md shrink-0">
-        <div className="w-2/8">
+      <div className="flex flex-col md:flex-row gap-4 items-center bg-white p-3 md:p-4 rounded-lg shadow-md shrink-0">
+        <div className="w-full md:w-2/8">
           <DropDownFilter
             items={categories}
             selectedKey={selectedCategory}
             setSelectedKey={handleCategoryChange}
           />
         </div>
-        <div className="w-2/8">
+        <div className="w-full md:w-2/8">
           <RangeFilter
             label="Price"
             min={min}
@@ -120,13 +115,13 @@ export default function ProductAdmin() {
             setRangeHandle={handleRangeChange}
           />
         </div>
-        <div className="w-3/8">
+        <div className="w-full md:w-3/8">
           <SearchFilter
             setStateToEdit={handleSearch}
             searchText="Search"
           />
         </div>
-        <div className="w-1/8">
+        <div className="w-full md:w-1/8">
           <PrimaryButton
             buttonText="Add New Product"
             onClickHandler={() => setAddingProduct(true)}
@@ -134,7 +129,7 @@ export default function ProductAdmin() {
         </div>
       </div>
 
-      <div className="flex-1 min-h-0 w-full overflow-hidden">
+      <div className="flex-1 min-h-0 w-full overflow-hidden bg-white rounded-lg shadow-sm">
         <PaginatedList
           queryKey={currentQueryKey}
           queryFn={() => getProducts(queryParams)}
@@ -144,7 +139,7 @@ export default function ProductAdmin() {
           renderItem={(product) => (
             <List.Item
               key={product.id}
-              className="hover:bg-gray-50 transition-colors px-4 py-3"
+              className="hover:bg-gray-50 transition-colors px-2 md:px-4 py-3"
               actions={[
                 <Popconfirm
                   title="Delete Product?"
@@ -160,13 +155,13 @@ export default function ProductAdmin() {
               ]}
             >
               <List.Item.Meta
-                avatar={<Avatar src={product.images?.[0]} shape="square" size={56} className="border shadow-sm" />}
-                title={<span className="font-semibold text-gray-800">{product.title}</span>}
+                avatar={<Avatar src={product.images?.[0]} shape="square" size={48} className="border shadow-sm" />}
+                title={<span className="font-semibold text-gray-800 text-sm md:text-base">{product.title}</span>}
                 description={
-                  <div className="flex items-center gap-2">
+                  <div className="flex items-center gap-2 text-xs md:text-sm">
                     <span className="text-green-600 font-bold">${product.price}</span>
                     <span className="text-gray-300">|</span>
-                    <span className="text-gray-400 text-xs">ID: {product.id}</span>
+                    <span className="text-gray-400">ID: {product.id}</span>
                   </div>
                 }
               />
