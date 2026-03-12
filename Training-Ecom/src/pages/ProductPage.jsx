@@ -1,6 +1,6 @@
 import React from 'react'
 import { useParams } from 'react-router-dom';
-import { StarIcon } from '@heroicons/react/20/solid'
+import { CiStar } from "react-icons/ci";
 import Loading from '../components/Loading';
 import PrimaryButton from '../components/utiliy-comp/PrimaryButton';
 import { useDispatch } from 'react-redux';
@@ -103,7 +103,7 @@ export default function ProductPage() {
                 <div className="flex items-center">
 
                   {[0, 1, 2, 3, 4].map((rating) => (
-                    <StarIcon
+                    <CiStar
                       key={rating}
                       aria-hidden="true"
                       className={classNames(

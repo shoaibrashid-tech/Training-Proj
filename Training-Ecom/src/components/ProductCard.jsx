@@ -8,7 +8,7 @@ function ProductCard({product}) {
     const navigate = useNavigate();
 
   return (
-    <div className='h-[31.5rem] w-full bg-white rounded-lg shadow-2xl shadow-black'>
+    <div className='h-[31.5rem] w-full bg-white rounded-lg shadow-sm shadow-grey-500'>
 
         <div className='w-full h-1/2 px-4 pt-4'>
             <img 

@@ -1,6 +1,6 @@
 
 import { Outlet } from "react-router-dom";
-import Navbar from '../Navbar-2'
+import Navbar from '../Navbar'
 export default function MainLayout({ menu }) {
     
   return (
