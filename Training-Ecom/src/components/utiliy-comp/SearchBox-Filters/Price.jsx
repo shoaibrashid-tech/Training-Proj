@@ -1,6 +1,3 @@
-import React, { useState } from 'react'
-import SecondaryButton from '../SecondaryButton'
-import SpecialButton from '../SpecialButton'
 import { Dropdown, Button } from 'antd';
 
 export default function Price() {
@@ -30,10 +27,6 @@ export default function Price() {
     ),
   },
 ];
-    const priceButtonHandler = () => {
-
-
-    }
   return (
     <>
         <Dropdown menu={{ items }} placement="bottomRight">

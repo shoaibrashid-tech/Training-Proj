@@ -13,7 +13,7 @@ import OrderSuccess from './pages/OrderSuccess'
 import Loading from './components/Loading';
 
 import { AuthContext } from './Utils/authContext'
-import getUserProfile from './Utils/AuthUtils'
+
 import ProtectedRoute from './Utils/ProtectedRoute'
 import MainLayout from './components/Layouts/MainLayout';
 

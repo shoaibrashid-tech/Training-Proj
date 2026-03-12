@@ -59,7 +59,7 @@ function Home() {
     },
     });
 
-  const { data: products = [], isLoading, isError } = useQuery({
+  const { data: products = [], isLoading } = useQuery({
     queryKey: ["products", page, filter, range, selectedCategory],
     queryFn: async () => {
       const data = await getProducts(buildParams());

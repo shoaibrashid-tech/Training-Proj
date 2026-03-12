@@ -1,8 +1,6 @@
-import React, { useEffect, useState } from "react";
 import CartProductCard from "../components/CartProductCard";
 import OrderSummary from "../components/OrderSummary";
 import { useSelector } from "react-redux";
-import { Link } from "react-router-dom";
 import { GrClear } from "react-icons/gr";
 import { useDispatch } from "react-redux";
 import { clearCart } from "../features/cart/cartSlice";
