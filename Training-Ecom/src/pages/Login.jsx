@@ -4,6 +4,7 @@ import getUserProfile from '../Utils/AuthUtils';
 import { useContext } from "react";
 import { AuthContext } from '../Utils/authContext';
 import api from '../api/axiosInstance';
+import { toast } from 'react-toastify';
 export default function Login() {
 
   const [email, setEmail] = useState("");
@@ -32,8 +33,16 @@ export default function Login() {
                 //console.log(user);
                 navigate(-1)
             }
+            
         } catch (error){
             console.error(error.message)
+            if(error.response?.status === 401 ){
+              toast.error("incorrect Credentials")
+            }else{
+              toast.error(`Unable to Login: ${error.message}`)
+            }
+            
+            
         }
 
     };

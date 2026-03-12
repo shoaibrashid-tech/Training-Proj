@@ -19,8 +19,9 @@ api.interceptors.request.use(
     }, (error) =>error)
 
 api.interceptors.response.use(
-    (response) => response, 
-    (error)=>error)
+  (response) => response,
+  (error) => Promise.reject(error)
+);
 
 
 export default api;
