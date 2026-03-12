@@ -1,5 +1,5 @@
 import React from 'react'
-import "../css/Scrolbar.css"
+import "../../css/Scrolbar.css"
 
 export default function ErrorFallback({error, resetErrorBoundary}) {
   console.log(error);

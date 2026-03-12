@@ -1,26 +1,31 @@
 import React, { useEffect, useContext } from 'react'
 import { BrowserRouter, Routes, Route } from 'react-router-dom';
+import { lazy, Suspense } from 'react';
 
 import Home from './pages/Home'
 import ProductPage from './pages/ProductPage'
 import CartPage from './pages/CartPage'
 import Login from './pages/Login'
 import Register from './pages/Register'
-import CheckoutPage from './pages/CheckoutPage'
+
 import OrderSuccess from './pages/OrderSuccess'
 
-
-import ProductAdmin from './pages/Admin/ProductAdmin';
+import Loading from './components/Loading';
 
 import { AuthContext } from './Utils/authContext'
 import getUserProfile from './Utils/AuthUtils'
 import ProtectedRoute from './Utils/ProtectedRoute'
 import MainLayout from './components/Layouts/MainLayout';
-import AdminLayout from './components/Layouts/AdminLayout';
+
 
 import api from './api/axiosInstance';
 
 import { ToastContainer } from 'react-toastify'
+
+const CheckoutPage = lazy(() => import('./pages/CheckoutPage'));
+
+const AdminLayout = lazy(() => import('./components/Layouts/AdminLayout'));
+const ProductAdmin = lazy(() => import('./pages/Admin/ProductAdmin'));
 
 export default function App() {
 
@@ -82,21 +87,35 @@ export default function App() {
           <Route path="/cart" element={<CartPage />} />
           <Route path="/login" element={<Login />} />
           <Route path="/register" element={<Register />} />
+          
           <Route
             path="/checkout"
             element={
-              <ProtectedRoute>
-                <CheckoutPage />
-              </ProtectedRoute>
+              <Suspense fallback={<div className="w-full h-screen flex justify-center items-center">
+                                  <Loading />
+                                </div>}>
+                <ProtectedRoute>
+                  <CheckoutPage />
+                </ProtectedRoute>
+              </Suspense>
             }
           />
           <Route path="/order-success" element={<OrderSuccess />} />
 
         </Route>
 
-        <Route element={<AdminLayout />}>
-          <Route path="/admin" element={<> Admin Page</>} />
-          <Route path="/admin/products" element={<ProductAdmin/>} />
+        <Route 
+          path="/admin/*" 
+          element={
+            <Suspense fallback={<div className="w-full h-screen flex justify-center items-center">
+                                  <Loading />
+                                </div>}>
+              <AdminLayout />
+            </Suspense>
+          }
+        >
+          <Route index element={<> Admin Page</>} />
+          <Route path="products" element={<ProductAdmin />} />
         </Route>
 
       </Routes>
