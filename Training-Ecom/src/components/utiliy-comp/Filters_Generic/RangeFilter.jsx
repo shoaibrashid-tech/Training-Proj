@@ -1,12 +1,15 @@
-import React, { useState, useRef } from "react";
-import { Dropdown, Slider } from "antd";
+import React, { useState, useEffect } from "react";
+import { Dropdown, Slider, InputNumber } from "antd";
 import { DownOutlined } from "@ant-design/icons";
-import { Link } from "react-router-dom";
 import { GrClear } from "react-icons/gr";
 
 export default function RangeFilter({ label, min, max, range, setRangeHandle }) {
   const [open, setOpen] = useState(false);
-  const debounceRef = useRef(null);
+  const [localRange, setLocalRange] = useState(range);
+
+  useEffect(() => {
+    setLocalRange(range);
+  }, [range]);
 
   const handleOpenChange = (nextOpen, info) => {
     if (info.source === "trigger" || nextOpen) {
@@ -14,60 +17,84 @@ export default function RangeFilter({ label, min, max, range, setRangeHandle }) 
     }
   };
 
-  const onChange = (value) => {
-    clearTimeout(debounceRef.current);
+  const onSliderChange = (value) => {
+    setLocalRange(value);
+  };
 
-    debounceRef.current = setTimeout(() => {
-      setRangeHandle(value);
-    }, 400); // debounce delay
+  const onAfterChange = (value) => {
+    setRangeHandle(value);
+  };
+
+  const onInputChange = (val, index) => {
+    const newRange = [...localRange];
+    newRange[index] = val;
+    setLocalRange(newRange);
+    setRangeHandle(newRange);
   };
 
   return (
-    <div className="h-10 w-full flex justify-center items-center border-2 border-blue-500 rounded-md">
+    <div className="h-10 w-full flex justify-center items-center border-2 border-blue-500 rounded-md bg-white">
       <Dropdown
         open={open}
         onOpenChange={handleOpenChange}
+        trigger={['click']}
         dropdownRender={() => (
-          <div className="bg-white p-4 shadow-md w-full rounded-md w-64">
-            
-            
-           
-            <div className="flex justify-between text-sm text-gray-600 mb-2">
-              <span className="text-blue-500">Min: {range[0]}</span>
-              <span className="text-blue-500">Max: {range[1]}</span>
+          <div className="bg-white p-4 shadow-xl border border-gray-200 rounded-md mt-2 w-full">
+            <div className="flex items-center justify-between gap-4 mb-4">
+              <InputNumber
+                min={min}
+                max={localRange[1]}
+                value={localRange[0]}
+                onChange={(val) => onInputChange(val, 0)}
+                prefix="$"
+                className="w-full"
+              />
+              <span className="text-gray-400">-</span>
+              <InputNumber
+                min={localRange[0]}
+                max={max}
+                value={localRange[1]}
+                onChange={(val) => onInputChange(val, 1)}
+                prefix="$"
+                className="w-full"
+              />
             </div>
 
             <Slider
               range
               min={min}
               max={max}
-              value={range}
-              onChange={onChange}
+              value={localRange}
+              onChange={onSliderChange}
+              onAfterChange={onAfterChange}
             />
 
-            {(range[0]>min || range[1]<max) ? 
-            <div className="w-full py-2 flex justify-end">
-               <button
-                             onClick={()=>setRangeHandle([min,max])}
-                             className="inline-flex text-red-700 items-center gap-2 text-sm font-medium text-primary-700 underline hover:no-underline"
-                           >
-                             Clear
-                             <GrClear />
+            {(range[0] > min || range[1] < max) && (
+              <div className="w-full pt-2 flex justify-end">
+                <button
+                  onClick={() => {
+                    setRangeHandle([min, max]);
+                    setLocalRange([min, max]);
+                  }}
+                  className="inline-flex text-red-600 items-center gap-2 text-sm font-medium underline hover:no-underline"
+                >
+                  Clear <GrClear />
                 </button>
-            </div> : <></>}
+              </div>
+            )}
           </div>
         )}
       >
         <a
           onClick={(e) => e.preventDefault()}
-          className="flex items-center justify-between w-full p-5 text-blue-500"
+          className="flex items-center justify-between w-full px-4 text-blue-500 cursor-pointer"
         >
-          <div className="w-full flex justify-between items-center">
-            
-            <span>{(range[0]>min || range[1]<max) ? `$ ${range[0]} - ${range[1]}`: label}</span>
-            <DownOutlined />
-          </div>
-          
+          <span className="truncate">
+            {(range[0] > min || range[1] < max) 
+              ? `$${range[0]} - $${range[1]}` 
+              : label}
+          </span>
+          <DownOutlined className="text-xs ml-2" />
         </a>
       </Dropdown>
     </div>

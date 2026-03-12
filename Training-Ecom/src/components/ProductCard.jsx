@@ -1,8 +1,10 @@
-import React from 'react'
+import React, {memo} from 'react'
 import SecondaryButton from './utiliy-comp/SecondaryButton'
 import PrimaryButton from './utiliy-comp/PrimaryButton'
 import { useNavigate } from 'react-router-dom'
+
 function ProductCard({product}) {
+    console.log(`${product.title} was re-rendered`);
     const navigate = useNavigate();
 
   return (
@@ -44,4 +46,4 @@ function ProductCard({product}) {
   )
 }
 
-export default ProductCard
+export default  memo(ProductCard)

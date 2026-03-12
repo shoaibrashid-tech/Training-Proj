@@ -7,7 +7,7 @@ import DropDownFilter from "../components/utiliy-comp/Filters_Generic/DropDownFi
 import RangeFilter from "../components/utiliy-comp/Filters_Generic/RangeFilter";
 //import MainPageHeroSection from "../components/MainPageHeroSection";
 import { CiFilter } from "react-icons/ci";
-import { getProducts } from "../services/ProductService";
+import { getProducts, getCategories } from "../services/ProductService";
 import { useSearchParams } from "react-router-dom";
 import { Pagination } from "antd";
 
@@ -21,7 +21,7 @@ function Home() {
   const min = 10;
   const max = 1000;
 
-  const [categories, setCategories] = useState([]);
+  //const [categories, setCategories] = useState([]);
   const [showMobileFilters, setShowMobileFilters] = useState(false);
 
   const [filter, setFilter] = useState("");
@@ -51,25 +51,16 @@ function Home() {
     return params;
   };
 
+  const { data: categories = [] } = useQuery({
+      queryKey: ["categories"],
+      queryFn: getCategories
+    });
+
   const { data: products = [], isLoading } = useQuery({
     queryKey: ["products", page, filter, range, selectedCategory],
     queryFn: async () => {
 
       const data = await getProducts(buildParams());
-      if(categories.length === 0){
-        const uniqueCategories = [
-          ...new Map(
-            data.map(p => [p.category.id, p.category])
-          ).values()
-        ];
-
-        const categoryItems = uniqueCategories.map(cat => ({
-          key: cat.id,
-          label: cat.name
-        }));
-
-        setCategories(categoryItems);
-      }
       
 
       return data;

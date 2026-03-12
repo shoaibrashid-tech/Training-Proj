@@ -6,10 +6,16 @@ export default function DropDownFilter({ items, selectedKey, setSelectedKey }) {
   const [open, setOpen] = useState(false);
   const debounceRef = useRef(null);
 
-  // Add "All" option
+  const formattedItems = items
+    .filter(item => item.key !== "all") 
+    .map((item) => ({
+      key: item.id.toString(),
+      label: item.name,
+    }));
+
   const menuItems = [
     { key: "all", label: "All" },
-    ...items,
+    ...formattedItems,
   ];
 
   const handleMenuClick = ({ key }) => {
@@ -31,25 +37,31 @@ export default function DropDownFilter({ items, selectedKey, setSelectedKey }) {
 
   const selectedItem =
     selectedKey === null
-      ? { label: "All" }
-      : items.find((item) => item.key === selectedKey);
+      ? { name: "All" }
+      : items.find((item) => item.id === selectedKey);
 
   return (
-    <div className="h-10 w-full flex justify-center items-center border-2 border-blue-500 rounded-md">
+    <div className="h-10 w-full flex justify-center items-center border-2 border-blue-500 rounded-md bg-white">
       <Dropdown
         menu={{
           items: menuItems,
           onClick: handleMenuClick,
+          selectable: true,
+          defaultSelectedKeys: [selectedKey ? selectedKey.toString() : "all"],
         }}
         open={open}
         onOpenChange={handleOpenChange}
+        trigger={['click']}
+        
       >
         <a
           onClick={(e) => e.preventDefault()}
-          className="flex items-center justify-between w-full p-5 text-blue-500"
+          className="flex items-center justify-between w-full px-4 text-blue-500 cursor-pointer"
         >
-          <span>{selectedItem ? selectedItem.label : "Category"}</span>
-          <DownOutlined />
+          <span className="truncate">
+            {selectedItem ? selectedItem.name : "Category"}
+          </span>
+          <DownOutlined className="text-xs ml-2" />
         </a>
       </Dropdown>
     </div>
