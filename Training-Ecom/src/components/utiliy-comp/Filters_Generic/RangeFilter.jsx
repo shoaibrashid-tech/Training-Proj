@@ -1,5 +1,5 @@
 import React, { useState, useEffect } from "react";
-import { Dropdown, Slider, InputNumber } from "antd";
+import { Popover, Slider, InputNumber } from "antd";
 import { DownOutlined } from "@ant-design/icons";
 import { GrClear } from "react-icons/gr";
 
@@ -10,12 +10,6 @@ export default function RangeFilter({ label, min, max, range, setRangeHandle }) 
   useEffect(() => {
     setLocalRange(range);
   }, [range]);
-
-  const handleOpenChange = (nextOpen, info) => {
-    if (info.source === "trigger" || nextOpen) {
-      setOpen(nextOpen);
-    }
-  };
 
   const onSliderChange = (value) => {
     setLocalRange(value);
@@ -32,22 +26,20 @@ export default function RangeFilter({ label, min, max, range, setRangeHandle }) 
     setRangeHandle(newRange);
   };
 
+
   return (
     <div className="h-10 w-full flex justify-center items-center border-2 border-blue-500 rounded-md bg-white">
-      <Dropdown
-        open={open}
-        onOpenChange={handleOpenChange}
-        trigger={['click']}
-        dropdownRender={() => (
-          <div className="bg-white p-4 shadow-xl border border-gray-200 rounded-md mt-2 w-full">
-            <div className="flex items-center justify-between gap-4 mb-4">
+      <Popover
+        content={
+          <div className="w-64 p-2">
+            <div className="flex items-center justify-between gap-2 mb-4">
               <InputNumber
                 min={min}
                 max={localRange[1]}
                 value={localRange[0]}
                 onChange={(val) => onInputChange(val, 0)}
                 prefix="$"
-                className="w-full"
+                size="small"
               />
               <span className="text-gray-400">-</span>
               <InputNumber
@@ -56,7 +48,7 @@ export default function RangeFilter({ label, min, max, range, setRangeHandle }) 
                 value={localRange[1]}
                 onChange={(val) => onInputChange(val, 1)}
                 prefix="$"
-                className="w-full"
+                size="small"
               />
             </div>
 
@@ -76,18 +68,21 @@ export default function RangeFilter({ label, min, max, range, setRangeHandle }) 
                     setRangeHandle([min, max]);
                     setLocalRange([min, max]);
                   }}
-                  className="inline-flex text-red-600 items-center gap-2 text-sm font-medium underline hover:no-underline"
+                  className="inline-flex text-red-600 items-center gap-2 text-sm font-medium underline"
                 >
                   Clear <GrClear />
                 </button>
               </div>
             )}
           </div>
-        )}
+        }
+        trigger="click"
+        open={open}
+        onOpenChange={(nextOpen) => setOpen(nextOpen)}
+        placement="bottom"
       >
-        <a
-          onClick={(e) => e.preventDefault()}
-          className="flex items-center justify-between w-full px-4 text-blue-500 cursor-pointer"
+        <button
+          className="flex items-center justify-between w-full px-4 text-blue-500 bg-transparent border-none cursor-pointer"
         >
           <span className="truncate">
             {(range[0] > min || range[1] < max) 
@@ -95,8 +90,8 @@ export default function RangeFilter({ label, min, max, range, setRangeHandle }) 
               : label}
           </span>
           <DownOutlined className="text-xs ml-2" />
-        </a>
-      </Dropdown>
+        </button>
+      </Popover>
     </div>
   );
 }

@@ -38,13 +38,13 @@ export default function CheckoutPage() {
     if (valid) setStep(2);
   };
 
-  const onSubmit = (data) => {
-    console.log("Checkout data:", data);
+  const onSubmit = () => {
+    //console.log("Checkout data:", data);
     setOpen(true);
   };
 
   const handleConfirmPayment = () => {
-    console.log("Payment confirmed");
+    //console.log("Payment confirmed");
 
     dispatch(clearCart()); // empty cart
     setOpen(false);

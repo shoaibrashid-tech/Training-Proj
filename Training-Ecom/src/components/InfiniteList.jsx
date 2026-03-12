@@ -7,14 +7,12 @@ export default function InfiniteList({
   queryKey,
   queryFn,
   renderItem,
-  height = 500,
 }) {
 
   const {
     data,
     fetchNextPage,
     hasNextPage,
-    isFetchingNextPage,
     status,
   } = useInfiniteQuery({
     queryKey,

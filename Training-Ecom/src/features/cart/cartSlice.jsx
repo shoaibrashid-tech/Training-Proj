@@ -12,24 +12,21 @@ const cartSlice = createSlice({
   reducers: {
 
     addToCart(state, action) {
+      // Ensure state.itemList is an array to prevent errors
+      const itemList = state.itemList || []; 
       const newItem = action.payload;
 
-      const existingItem = state.itemList.find(
-        (item) => item.id === newItem.id
-      );
+      const existingItem = itemList.find((item) => item.id === newItem.id);
 
       if (existingItem) {
         existingItem.quantity += 1;
-        existingItem.totalPrice =
-          existingItem.price * existingItem.quantity;
+        existingItem.totalPrice = existingItem.price * existingItem.quantity;
       } else {
-        state.itemList.push({
-          ...newItem,
-          quantity: 1,
-          totalPrice: newItem.price,
-        });
+        state.itemList = [
+            ...itemList, 
+            { ...newItem, quantity: 1, totalPrice: newItem.price }
+        ];
       }
-
       state.totalQuantity += 1;
     },
 

@@ -1,8 +1,8 @@
 import React from 'react'
-import "../css/Scrolbar.css"
+import "../../css/Scrolbar.css"
 
 export default function ErrorFallback({error, resetErrorBoundary}) {
-  console.log(error);
+  //console.log(error);
   return (
     <div className="min-h-screen flex items-center justify-center bg-white px-6">
   <div className="max-w-lg w-full text-center">

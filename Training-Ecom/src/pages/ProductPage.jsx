@@ -1,6 +1,6 @@
 import React from 'react'
 import { useParams } from 'react-router-dom';
-import { StarIcon } from '@heroicons/react/20/solid'
+import { CiStar } from "react-icons/ci";
 import Loading from '../components/Loading';
 import PrimaryButton from '../components/utiliy-comp/PrimaryButton';
 import { useDispatch } from 'react-redux';
@@ -27,7 +27,7 @@ export default function ProductPage() {
   ];
 
   const handleAddToCart = () => {
-    console.log(product);
+    //console.log(product);
     dispatch(addToCart(product))
 
     toast.success("Product Added to Cart")
@@ -43,7 +43,7 @@ export default function ProductPage() {
 
   const fetchProduct = async () => {
     const response = await api.get(`/products/${id}`);
-    console.log(response.data);
+    //console.log(response.data);
     return response.data;
   };
 
@@ -103,7 +103,7 @@ export default function ProductPage() {
                 <div className="flex items-center">
 
                   {[0, 1, 2, 3, 4].map((rating) => (
-                    <StarIcon
+                    <CiStar
                       key={rating}
                       aria-hidden="true"
                       className={classNames(

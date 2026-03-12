@@ -1,119 +1,94 @@
-import React, { useState } from "react";
+import React, { useState, useContext, useEffect } from "react";
 import { useNavigate } from "react-router-dom";
-import { useContext } from "react";
-import { AuthContext } from "../Utils/authContext";
 import { toast } from "react-toastify";
+import { AuthContext } from "../Utils/authContext";
 import api from "../api/axiosInstance";
 
 export default function Register() {
-
   const [name, setName] = useState("");
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
-  const {user} = useContext(AuthContext);
+  
+  const { user } = useContext(AuthContext);
   const navigate = useNavigate();
-    if(user){
-        navigate("/")
+
+  // Redirect if already logged in
+  useEffect(() => {
+    if (user) {
+      navigate("/", { replace: true });
     }
-  const RegisterUser = async (e) => {
-  e.preventDefault();
+  }, [user, navigate]);
 
-  try {
-    const response = await api.post("/users/", {
-      name,
-      email,
-      password,
-      avatar: "https://i.pravatar.cc/300"
-    });
+  const registerUser = async (e) => {
+    e.preventDefault();
 
-    console.log(response.data);
+    try {
+      await api.post("/users/", {
+        name,
+        email,
+        password,
+        avatar: "https://i.pravatar.cc/300"
+      });
 
-    toast.success("Account Created");
-
-    setTimeout(() => {
+      toast.success("Account Created. Please log in.");
+      
+      // Navigate to login after registration
       navigate("/login");
-    }, 1000);
-
-  } catch (error) {
-    console.error(error.response?.data || error.message);
-    toast.error("Unable to Create Account");
-  }
-};
+    } catch (error) {
+      console.error(error.response?.data || error.message);
+      // More specific error handling
+      const errorMessage = error.response?.data?.message || "Unable to Create Account";
+      toast.error(errorMessage);
+    }
+  };
 
   return (
     <div className="flex min-h-full flex-col justify-center px-6 py-12 lg:px-8">
-
       <div className="sm:mx-auto sm:w-full sm:max-w-sm">
-        <img
-          alt="Company"
-          src="https://tailwindcss.com/plus-assets/img/logos/mark.svg?color=indigo&shade=500"
-          className="mx-auto h-10 w-auto"
-        />
         <h2 className="mt-10 text-center text-2xl font-bold text-black">
           Create your account
         </h2>
       </div>
 
       <div className="mt-10 sm:mx-auto sm:w-full sm:max-w-sm">
-
-        <form onSubmit={RegisterUser} className="space-y-6">
-
+        <form onSubmit={registerUser} className="space-y-6">
           <div>
-            <label className="block text-sm font-medium text-black">
-              Full Name
-            </label>
-            <div className="mt-2">
-              <input
-                type="text"
-                required
-                placeholder="Name"
-                onChange={(e) => setName(e.target.value)}
-                className="block w-full rounded-md px-3 py-1.5 text-black outline outline-blue-500"
-              />
-            </div>
+            <label className="block text-sm font-medium text-black">Full Name</label>
+            <input
+              type="text"
+              required
+              onChange={(e) => setName(e.target.value)}
+              className="block w-full rounded-md px-3 py-1.5 border outline-blue-500"
+            />
           </div>
 
           <div>
-            <label className="block text-sm font-medium text-black">
-              Email address
-            </label>
-            <div className="mt-2">
-              <input
-                type="email"
-                required
-                placeholder="Email"
-                onChange={(e) => setEmail(e.target.value)}
-                className="block w-full rounded-md px-3 py-1.5 text-black outline outline-blue-500"
-              />
-            </div>
+            <label className="block text-sm font-medium text-black">Email address</label>
+            <input
+              type="email"
+              required
+              onChange={(e) => setEmail(e.target.value)}
+              className="block w-full rounded-md px-3 py-1.5 border outline-blue-500"
+            />
           </div>
 
           <div>
-            <label className="block text-sm font-medium text-black">
-              Password
-            </label>
-            <div className="mt-2">
-              <input
-                type="password"
-                required
-                placeholder="Password"
-                onChange={(e) => setPassword(e.target.value)}
-                className="block w-full rounded-md px-3 py-1.5 text-black outline outline-blue-500"
-              />
-            </div>
+            <label className="block text-sm font-medium text-black">Password</label>
+            <input
+              type="password"
+              required
+              onChange={(e) => setPassword(e.target.value)}
+              className="block w-full rounded-md px-3 py-1.5 border outline-blue-500"
+            />
           </div>
 
-          <div>
-            <button
-              type="submit"
-              className="flex w-full justify-center rounded-md bg-indigo-500 px-3 py-1.5 font-semibold text-white hover:bg-indigo-400"
-            >
-              Register
-            </button>
-          </div>
-
+          <button
+            type="submit"
+            className="flex w-full justify-center rounded-md bg-indigo-500 px-3 py-1.5 font-semibold text-white hover:bg-indigo-400"
+          >
+            Register
+          </button>
         </form>
-
       </div>
     </div>
   );
