@@ -9,13 +9,16 @@ import Register from './pages/Register'
 import CheckoutPage from './pages/CheckoutPage'
 import OrderSuccess from './pages/OrderSuccess'
 
+
 import ProductAdmin from './pages/Admin/ProductAdmin';
 
 import { AuthContext } from './Utils/authContext'
 import getUserProfile from './Utils/AuthUtils'
 import ProtectedRoute from './Utils/ProtectedRoute'
 import MainLayout from './components/Layouts/MainLayout';
-import AdminLayout from './components/Layouts/AdminLayout'
+import AdminLayout from './components/Layouts/AdminLayout';
+
+import api from './api/axiosInstance';
 
 import { ToastContainer } from 'react-toastify'
 
@@ -34,17 +37,23 @@ export default function App() {
 
     const loadUser = async () => {
 
-      const token = localStorage.getItem("access_token");
+      try {
+        const token = localStorage.getItem("access_token");
 
-      if (token) {
-        const userData = await getUserProfile(token);
+        if (token) {
+          const userData = await api.get("/auth/profile");
 
-        if (userData) {
-          login(userData);
+          if (userData?.data) {
+            login(userData.data);
+          }
         }
+
+      } catch (error) {
+        console.error("Failed to load user:", error.response?.data || error.message);
+      } finally {
+        setLoading(false);
       }
 
-      setLoading(false);
     };
 
     loadUser();
