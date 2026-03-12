@@ -53,18 +53,18 @@ function Home() {
 
   const { data: categories = [] } = useQuery({
       queryKey: ["categories"],
-      queryFn: getCategories
+      queryFn: async () => {
+      const data = await getCategories();
+      return Array.isArray(data) ? data : [];
+    },
     });
 
-  const { data: products = [], isLoading } = useQuery({
+  const { data: products = [], isLoading, isError } = useQuery({
     queryKey: ["products", page, filter, range, selectedCategory],
     queryFn: async () => {
-
       const data = await getProducts(buildParams());
-      
-
-      return data;
-    }
+      return Array.isArray(data) ? data : [];
+    },
   });
 
   const changePage = (page) => {
