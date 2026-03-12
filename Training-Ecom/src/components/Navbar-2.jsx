@@ -1,7 +1,7 @@
 import { useContext } from "react";
-import { Link } from "react-router-dom";
+import { NavLink, Link } from "react-router-dom";
 import { Disclosure, Menu, MenuButton, MenuItems, MenuItem } from '@headlessui/react';
-import { Bars3Icon, XMarkIcon, BellIcon } from '@heroicons/react/24/outline';
+import { Bars3Icon, XMarkIcon, } from '@heroicons/react/24/outline';
 import { AuthContext } from "../Utils/authContext";
 import me from "../assets/Sneakers.webp";
 
@@ -27,25 +27,27 @@ export default function Navbar({ menu }) {
               </div>
 
               {/* Desktop Menu */}
-              <div className="hidden md:flex md:space-x-4">
+              <div className="hidden w-full mx-20 md:flex md:space-x-4">
                 {menu.map((item, idx) => (
-                  <Link
+                  <NavLink
                     key={idx}
                     to={item.href}
-                    className="text-white px-3 py-2 rounded-md text-sm font-medium hover:bg-white/20"
+                    className={({ isActive }) =>
+                      `px-3 py-2 rounded-md text-sm font-medium transition-colors ${
+                        isActive 
+                          ? "bg-white text-black" // Styles for the active state
+                          : "text-white hover:bg-white/20" // Styles for inactive state
+                      }`
+                    }
                   >
                     {item.label}
-                  </Link>
+                  </NavLink>
                 ))}
               </div>
 
               {/* Right Icons */}
-              <div className="flex items-center md:order-2 space-x-3">
-                {/* Notification */}
-                <button className="relative rounded-full p-1 text-white hover:bg-white/20 focus:outline-none focus:ring-2 focus:ring-white">
-                  <span className="sr-only">View notifications</span>
-                  <BellIcon className="h-6 w-6" />
-                </button>
+              <div className="flex w-1/4 flex justify-end items-center md:order-2 space-x-3">
+                
 
                 {/* User Menu */}
                 <Menu as="div" className="relative">
@@ -63,26 +65,6 @@ export default function Navbar({ menu }) {
                   <MenuItems className="absolute right-0 mt-2 w-48 origin-top-right bg-white rounded-md shadow-lg py-1 focus:outline-none z-50">
                     {user ? (
                       <>
-                        <MenuItem>
-                          {({ active }) => (
-                            <Link
-                              to="/profile"
-                              className={classNames(active ? "bg-gray-100" : "", "block px-4 py-2 text-sm text-gray-700")}
-                            >
-                              Profile
-                            </Link>
-                          )}
-                        </MenuItem>
-                        <MenuItem>
-                          {({ active }) => (
-                            <Link
-                              to="/settings"
-                              className={classNames(active ? "bg-gray-100" : "", "block px-4 py-2 text-sm text-gray-700")}
-                            >
-                              Settings
-                            </Link>
-                          )}
-                        </MenuItem>
                         <MenuItem>
                           {({ active }) => (
                             <button

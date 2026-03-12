@@ -71,6 +71,7 @@ const handleLogout = () => {
 
   const userMenu = {
     items: [
+      /*
       {
         key: "profile",
         icon: <UserOutlined />,
@@ -82,6 +83,7 @@ const handleLogout = () => {
         label: "Settings",
       },
       { type: "divider" },
+       */
       {
         key: "logout",
         icon: <LogoutOutlined />,

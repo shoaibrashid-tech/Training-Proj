@@ -38,7 +38,7 @@ export default function CheckoutPage() {
     if (valid) setStep(2);
   };
 
-  const onSubmit = (data) => {
+  const onSubmit = () => {
     //console.log("Checkout data:", data);
     setOpen(true);
   };

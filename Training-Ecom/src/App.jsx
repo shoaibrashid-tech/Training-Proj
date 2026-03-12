@@ -34,8 +34,6 @@ export default function App() {
   const navBarMenu = [
     {label: "Home", href: "/"},
     {label: "Cart", href: "/cart"},
-    {label: "About Us", href:"/about"},
-    {label: "Contanct Us", href: "/contact"},
   ]
 
   const { login, setLoading } = useContext(AuthContext);
