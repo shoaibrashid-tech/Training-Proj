@@ -1,6 +1,8 @@
 import React from 'react'
+import "../css/Scrolbar.css"
 
 export default function ErrorFallback({error, resetErrorBoundary}) {
+  console.log(error);
   return (
     <div className="min-h-screen flex items-center justify-center bg-white px-6">
   <div className="max-w-lg w-full text-center">
@@ -30,6 +32,18 @@ export default function ErrorFallback({error, resetErrorBoundary}) {
       We encountered an unexpected error while loading this page.  
       Please try reloading the page.
     </p>
+    <div className='flex flex-col mb-5'>
+      <div className="flex items-center gap-2 p-4 bg-blue-500 rounded-tr-2xl rounded-tl-2xl">
+        <h1 className=' text-xl font-bold'>{error.name}: </h1>
+        <p className=' text-md font-light'>{error.message}</p>
+      </div>  
+      <div className="max-h-52 overflow-y-auto p-4 bg-gray-200 border-2 border-t-0 border-black rounded-bl-2xl text-left text-sm font-mono custom-scrollbar">
+        <pre className="whitespace-pre-wrap">{error.stack}</pre>
+      </div>
+      
+    </div>
+      
+    
 
     {/* Reload Button */}
     <button
