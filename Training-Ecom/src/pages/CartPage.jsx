@@ -7,7 +7,7 @@ import { clearCart } from "../features/cart/cartSlice";
 
 export default function CartPage() {
   const cart = useSelector((state) => state.cart.itemList)
-  console.log(cart)
+  //console.log(cart)
   const dispatch = useDispatch();
 
   return (

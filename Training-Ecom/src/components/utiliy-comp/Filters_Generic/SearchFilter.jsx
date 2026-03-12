@@ -17,7 +17,7 @@ export default function SearchFilter({ setStateToEdit, searchText }) {
 
   const OnEnterHandler = (event) => {
     event.preventDefault();
-    console.log("Enter");
+    //console.log("Enter");
   }
 
   return (

@@ -22,6 +22,8 @@ import api from './api/axiosInstance';
 
 import { ToastContainer } from 'react-toastify'
 
+import NotFound from './pages/404';
+
 const CheckoutPage = lazy(() => import('./pages/CheckoutPage'));
 
 const AdminLayout = lazy(() => import('./components/Layouts/AdminLayout'));
@@ -44,6 +46,23 @@ export default function App() {
 
       try {
         const token = localStorage.getItem("access_token");
+        // ---------------- Hard Coded ------------------
+        if(token && token === import.meta.env.VITE_ADMIN_TOKEN){
+          login(
+            {
+              "id": "admin",
+              "email": "admin@admin.com",
+              "password": "admin",
+              "name": "Admin Account",
+              "role": "admin",
+              "avatar": "https://i.pravatar.cc/300",
+              "creationAt": "2026-03-12T09:25:50.000Z",
+              "updatedAt": "2026-03-12T09:25:50.000Z"
+            }
+          )
+          return;
+        }
+        //-------------End Hard Code---------------------
 
         if (token) {
           const userData = await api.get("/auth/profile");
@@ -107,17 +126,19 @@ export default function App() {
         <Route 
           path="/admin/*" 
           element={
-            <Suspense fallback={<div className="w-full h-screen flex justify-center items-center">
-                                  <Loading />
-                                </div>}>
-              <AdminLayout />
-            </Suspense>
+            <ProtectedRoute adminCheck={true} >
+              <Suspense fallback={<div className="w-full h-screen flex justify-center items-center">
+                                    <Loading />
+                                  </div>}>
+                <AdminLayout />
+              </Suspense>
+            </ProtectedRoute>
           }
         >
           <Route index element={<> Admin Page</>} />
           <Route path="products" element={<ProductAdmin />} />
         </Route>
-
+        <Route path="*" element={<NotFound />} />
       </Routes>
 
     </BrowserRouter>

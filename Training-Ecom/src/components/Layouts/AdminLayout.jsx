@@ -23,6 +23,7 @@ const sideMenu = [
     icon: <LaptopOutlined />,
     label: <Link to="/admin/products">Products</Link>,
   },
+  /*
   {
     key: "sub2",
     icon: <UserOutlined />,
@@ -39,7 +40,7 @@ const sideMenu = [
     children: [
       { key: "5", label: <Link to="/admin/orders">Order List</Link> },
     ],
-  },
+  },*/
 ];
 
 export default function AdminLayout() {

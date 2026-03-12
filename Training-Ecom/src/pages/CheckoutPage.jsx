@@ -39,12 +39,12 @@ export default function CheckoutPage() {
   };
 
   const onSubmit = (data) => {
-    console.log("Checkout data:", data);
+    //console.log("Checkout data:", data);
     setOpen(true);
   };
 
   const handleConfirmPayment = () => {
-    console.log("Payment confirmed");
+    //console.log("Payment confirmed");
 
     dispatch(clearCart()); // empty cart
     setOpen(false);

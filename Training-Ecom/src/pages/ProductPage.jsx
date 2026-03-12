@@ -27,7 +27,7 @@ export default function ProductPage() {
   ];
 
   const handleAddToCart = () => {
-    console.log(product);
+    //console.log(product);
     dispatch(addToCart(product))
 
     toast.success("Product Added to Cart")
@@ -43,7 +43,7 @@ export default function ProductPage() {
 
   const fetchProduct = async () => {
     const response = await api.get(`/products/${id}`);
-    console.log(response.data);
+    //console.log(response.data);
     return response.data;
   };
 

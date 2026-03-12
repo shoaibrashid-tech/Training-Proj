@@ -1,122 +1,100 @@
-import React, {useState} from 'react'
-import { useNavigate } from 'react-router-dom';
-import getUserProfile from '../Utils/AuthUtils';
-import { useContext } from "react";
-import { AuthContext } from '../Utils/authContext';
-import api from '../api/axiosInstance';
+import React, { useState, useContext } from 'react';
+import { useNavigate, useLocation } from 'react-router-dom';
 import { toast } from 'react-toastify';
-export default function Login() {
+import { AuthContext } from '../Utils/authContext';
+import getUserProfile from '../Utils/AuthUtils';
+import api from '../api/axiosInstance';
 
+export default function Login() {
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
-  const { login, user } = useContext(AuthContext);
-    const navigate = useNavigate();
-    if(user){
-        navigate("/")
+  const { login } = useContext(AuthContext); // Removed 'user' as it's not needed for the login form
+  
+  const navigate = useNavigate();
+  const location = useLocation();
+
+  // Consolidated redirect logic
+  const handleRedirect = () => {
+    // Look for the "from" path passed by ProtectedRoute, default to "/"
+    const from = location.state?.from?.pathname || "/";
+    navigate(from, { replace: true });
+  };
+
+  const sendLogin = async (e) => {
+    e.preventDefault();
+
+    // --- Hard Coded Admin ---
+    if (email === "admin@admin.com" && password === "admin") {
+      login({
+        id: "admin",
+        email: "admin@admin.com",
+        name: "Admin Account",
+        role: "admin",
+      });
+      localStorage.setItem("access_token", import.meta.env.VITE_ADMIN_TOKEN || "mock-token");
+      handleRedirect(); // Redirect immediately after setting context
+      return;
     }
 
-    
-    const sendLogin = async (e)=>{
-        e.preventDefault();
-        try{
-            const response = await api.post(`https://api.escuelajs.co/api/v1/auth/login`, {
-                    email: email,
-                    password: password
-                
-            });
-            if(response.data?.access_token){
-                for(let i in response.data){
-                   localStorage.setItem(i, response.data[i]); 
-                }
-                const user = await getUserProfile(response.data.access_token);
-                login(user);
-                //console.log(user);
-                navigate(-1)
-            }
-            
-        } catch (error){
-            console.error(error.message)
-            if(error.response?.status === 401 ){
-              toast.error("incorrect Credentials")
-            }else{
-              toast.error(`Unable to Login: ${error.message}`)
-            }
-            
-            
-        }
-
-    };
+    // --- API Login ---
+    try {
+      const response = await api.post(`/auth/login`, { email, password });
+      
+      if (response.data?.access_token) {
+        Object.entries(response.data).forEach(([key, value]) => {
+          localStorage.setItem(key, value);
+        });
+        
+        const userData = await getUserProfile(response.data.access_token);
+        login(userData);
+        handleRedirect(); // Redirect immediately after setting context
+      }
+    } catch (error) {
+      console.error(error.message);
+      if (error.response?.status === 401) {
+        toast.error("Incorrect Credentials");
+      } else {
+        toast.error(`Unable to Login: ${error.message}`);
+      }
+    }
+  };
 
   return (
     <div className="flex min-h-full flex-col justify-center px-6 py-12 lg:px-8">
-        <div className="sm:mx-auto sm:w-full sm:max-w-sm">
-          <img
-            alt="Your Company"
-            src="https://tailwindcss.com/plus-assets/img/logos/mark.svg?color=indigo&shade=500"
-            className="mx-auto h-10 w-auto"
-          />
-          <h2 className="mt-10 text-center text-2xl/9 font-bold tracking-tight text-black">Sign in to your account</h2>
-        </div>
-
-        <div className="mt-10 sm:mx-auto sm:w-full sm:max-w-sm">
-          <form onSubmit={sendLogin} method="POST" className="space-y-6">
-            <div>
-              <label htmlFor="email" className="block text-sm/6 font-medium text-black">
-                Email address
-              </label>
-              <div className="mt-2">
-                <input
-                  id="email"
-                  name="email"
-                  type="email"
-                  required
-                  autoComplete="email"
-                  placeholder='Email'
-                  onChange={(e)=>setEmail(e.target.value)}
-                  className="block w-full rounded-md bg-white/5 px-3 py-1.5 text-base text-black outline-1 -outline-offset-1 outline-blue-500 placeholder:text-gray-900 focus:outline-2 focus:-outline-offset-2 focus:outline-indigo-500 sm:text-sm/6"
-                />
-              </div>
-            </div>
-
-            <div>
-              <div className="flex items-center justify-between">
-                <label htmlFor="password" className="block text-sm/6 font-medium text-black">
-                  Password
-                </label>
-                <div className="text-sm">
-                  <a href="#" className="font-semibold text-blue-500 hover:text-blue-300">
-                    Forgot password?
-                  </a>
-                </div>
-              </div>
-              <div className="mt-2">
-                <input
-                  id="password"
-                  name="password"
-                  type="password"
-                  required
-                  autoComplete="current-password"
-                  placeholder='Password'
-                  onChange={(e)=>setPassword(e.target.value)}
-                  className="block w-full rounded-md bg-white/5 px-3 py-1.5 text-base text-black outline-1 -outline-offset-1 outline-blue-500 placeholder:text-gray-900 focus:outline-2 focus:-outline-offset-2 focus:outline-indigo-500 sm:text-sm/6"
-                />
-              </div>
-            </div>
-
-            <div>
-              <button
-                type="submit"
-                
-                className="flex w-full justify-center rounded-md bg-indigo-500 px-3 py-1.5 text-sm/6 font-semibold text-white hover:bg-indigo-400 focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-indigo-500"
-              >
-                Sign in
-              </button>
-            </div>
-          </form>
-
-          
-        </div>
+      <div className="sm:mx-auto sm:w-full sm:max-w-sm">
+        <h2 className="mt-10 text-center text-2xl font-bold text-black">Sign in to your account</h2>
       </div>
 
-  )
+      <div className="mt-10 sm:mx-auto sm:w-full sm:max-w-sm">
+        <form onSubmit={sendLogin} className="space-y-6">
+          <div>
+            <label className="block text-sm font-medium text-black">Email address</label>
+            <input
+              type="email"
+              required
+              onChange={(e) => setEmail(e.target.value)}
+              className="block w-full rounded-md px-3 py-1.5 text-black border outline-blue-500"
+            />
+          </div>
+
+          <div>
+            <label className="block text-sm font-medium text-black">Password</label>
+            <input
+              type="password"
+              required
+              onChange={(e) => setPassword(e.target.value)}
+              className="block w-full rounded-md px-3 py-1.5 text-black border outline-blue-500"
+            />
+          </div>
+
+          <button
+            type="submit"
+            className="flex w-full justify-center rounded-md bg-indigo-500 px-3 py-1.5 text-white hover:bg-indigo-400"
+          >
+            Sign in
+          </button>
+        </form>
+      </div>
+    </div>
+  );
 }

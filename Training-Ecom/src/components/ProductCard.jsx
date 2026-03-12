@@ -4,7 +4,7 @@ import PrimaryButton from './utiliy-comp/PrimaryButton'
 import { useNavigate } from 'react-router-dom'
 
 function ProductCard({product}) {
-    console.log(`${product.title} was re-rendered`);
+    //console.log(`${product.title} was re-rendered`);
     const navigate = useNavigate();
 
   return (
@@ -20,9 +20,9 @@ function ProductCard({product}) {
             <div className='h-1/4 '>
                 <div className='w-full'>
                     <div className='h-full line-clamp-2'> 
-                        <href>
-                            <h1 className=' font-bold object-cover pt-2 pr-1'>{product.title}</h1>
-                        </href>
+                        
+                        <h1 className=' font-bold object-cover pt-2 pr-1'>{product.title}</h1>
+                        
                            
                     </div>
                         
@@ -34,7 +34,7 @@ function ProductCard({product}) {
                 <h1 className=' text-2xl font-bold'>$ {product.price}</h1>
             </div>
             <div className='h-1/2'>
-                <hr class="h-1 bg-neutral-quaternary"></hr>
+                <hr className="h-1 bg-neutral-quaternary"></hr>
                 <p className='my-4 px-2 line-clamp-3 text-sm'>
                     {product.description}
                 </p>
