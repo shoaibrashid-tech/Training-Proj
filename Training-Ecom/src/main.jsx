@@ -3,16 +3,13 @@ import { createRoot } from 'react-dom/client'
 import './index.css'
 import App from './App.jsx'
 import { AuthProvider } from './Utils/authContext.jsx'
+import { LocaleProvider } from './Utils/LocaleContext.jsx'
 import { QueryClient, QueryClientProvider } from '@tanstack/react-query';
-
 import { Provider } from 'react-redux'
 import { store} from './app/store.jsx'
 import ErrorFallback from './components/Falbacks/ErrorFallback';
-
 import { ErrorBoundary } from 'react-error-boundary';
-
-
-
+import './i18n/config'
 
 const queryClient = new QueryClient({
                                       defaultOptions: {
@@ -32,7 +29,9 @@ createRoot(document.getElementById('root')).render(
       <Provider store={store}>
         <ErrorBoundary FallbackComponent={ErrorFallback}>
           <AuthProvider>
-            <App />
+            <LocaleProvider>
+              <App />
+            </LocaleProvider>
           </AuthProvider>
          </ErrorBoundary>
       </Provider>

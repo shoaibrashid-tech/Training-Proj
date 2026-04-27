@@ -1,10 +1,16 @@
 import React, { useState, useContext } from "react";
 import { Link } from "react-router-dom";
+import { useTranslation } from "react-i18next";
 import me from "../assets/me.png";
 import { AuthContext } from "../Utils/authContext";
 import { FaUserAlt, FaBars, FaTimes } from "react-icons/fa";
+import LanguageSelector from "./utiliy-comp/LanguageSelect";
+import CurrencySelector from "./utiliy-comp/CurrencySelect";
+import { Flex } from "antd";
+import { strings } from "../constants/strings";
 
 export default function Navbar({ menu }) {
+  const { t } = useTranslation(); 
   const { user, logout } = useContext(AuthContext);
   const [open, setOpen] = useState(false);
   const [mobileMenuOpen, setMobileMenuOpen] = useState(false);
@@ -14,7 +20,7 @@ export default function Navbar({ menu }) {
       <div className="max-w-screen-xl mx-auto flex items-center justify-between p-4">
         
         <Link to="/" className="text-2xl font-bold text-blue-600 tracking-tight">
-          MyStore
+          {t(strings.brand)}
         </Link>
 
         <div className="flex items-center gap-2 md:gap-8">
@@ -30,7 +36,7 @@ export default function Navbar({ menu }) {
                     onClick={() => setMobileMenuOpen(false)}
                     className="block py-3 px-4 rounded-lg text-gray-600 hover:bg-blue-50 hover:text-blue-600 font-medium transition"
                   >
-                    {item.label}
+                    {t(item.label)}
                   </Link>
                 </li>
               ))}
@@ -52,19 +58,29 @@ export default function Navbar({ menu }) {
                     <>
                       <div className="px-4 py-2 text-xs text-gray-400 border-b truncate">{user.email}</div>
                       <button onClick={logout} className="w-full text-left px-4 py-2 hover:bg-gray-50 text-sm font-medium text-red-600">
-                        Logout
+                        {t(strings.logout)}
                       </button>
                     </>
                   ) : (
                     <>
                       <Link to="/login" onClick={() => setOpen(false)} className="block w-full text-left px-4 py-2 hover:bg-gray-50 text-sm font-medium">
-                        Login
+                        {t(strings.login)}
                       </Link>
                       <Link to="/register" onClick={() => setOpen(false)} className="block w-full text-left px-4 py-2 hover:bg-gray-50 text-sm font-medium">
-                        Create Account
+                        {t(strings.register)}
                       </Link>
                     </>
                   )}
+                  <div className="mx-4 py-4 border-t border-gray-200 flex flex-col items-center justify-center gap-4">
+                    <Flex align="center" justify="space-between" gap={12} direction="column">
+                      <p className="text-xs text-gray-400 mb-1">{t(strings.language)}</p>
+                      <LanguageSelector width={90} />
+                    </Flex>
+                    <Flex align="center" justify="space-between" gap={12} direction="column">
+                      <p className="text-xs text-gray-400 mb-1">{t(strings.currency)}</p>
+                      <CurrencySelector width={90} />
+                    </Flex>
+                  </div>
                 </div>
               )}
             </div>

@@ -15,7 +15,7 @@ import MainLayout from './components/Layouts/MainLayout';
 import api from './api/axiosInstance';
 import { ToastContainer } from 'react-toastify';
 import NotFound from './pages/404';
-
+import { strings } from './constants/strings';
 const CheckoutPage = lazy(() => import('./pages/CheckoutPage'));
 const AdminLayout = lazy(() => import('./components/Layouts/AdminLayout'));
 const ProductAdmin = lazy(() => import('./pages/Admin/ProductAdmin'));
@@ -29,7 +29,7 @@ const DevTools = lazy(() =>
 
 export default function App() {
   const [showDevtools, setShowDevtools] = useState(false);
-  const navBarMenu = [{label: "Home", href: "/"}, {label: "Cart", href: "/cart"}];
+  const navBarMenu = [{label: strings.home, href: "/"}, {label: strings.cart, href: "/cart"}];
   const { login, setLoading } = useContext(AuthContext);
 
   useEffect(() => {
