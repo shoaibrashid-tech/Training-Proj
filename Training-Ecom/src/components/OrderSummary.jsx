@@ -1,12 +1,13 @@
 import { Link } from "react-router-dom";
 import { useSelector } from "react-redux";
 import PrimaryButton from "./utiliy-comp/PrimaryButton";
-import { useNavigate } from "react-router-dom";
-
+import { useLocalizedNavigate } from "../hooks/useLocalizedNavigate";
+import LocalizedLink from "./utiliy-comp/LocalisedLink";
 export default function OrderSummary() {
 
   const cartItems = useSelector((state) => state.cart.itemList);
-  const navigate = useNavigate();
+  const localizedNavigate = useLocalizedNavigate();
+
   // Subtotal
   const subtotal = cartItems.reduce((total, item) => {
     return total + item.price * item.quantity;
@@ -76,7 +77,7 @@ export default function OrderSummary() {
         </div>
 
         <PrimaryButton buttonText={"Checkout"} onClickHandler={()=>{
-          navigate("/checkout")
+          localizedNavigate("/checkout")
         }} />
 
         <div className="flex items-center justify-center gap-2">
@@ -84,12 +85,12 @@ export default function OrderSummary() {
             or
           </span>
 
-          <Link
+          <LocalizedLink
             to="/"
             className="inline-flex items-center gap-2 text-sm font-medium text-blue-600 underline hover:no-underline"
           >
             Continue Shopping
-          </Link>
+          </LocalizedLink>
         </div>
 
       </div>

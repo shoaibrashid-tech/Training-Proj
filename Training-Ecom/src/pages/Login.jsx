@@ -1,23 +1,23 @@
 import React, { useState, useContext } from 'react';
-import { useNavigate, useLocation } from 'react-router-dom';
+import { useLocation } from 'react-router-dom';
 import { toast } from 'react-toastify';
 import { AuthContext } from '../Utils/authContext';
 import getUserProfile from '../Utils/AuthUtils';
 import api from '../api/axiosInstance';
-
+import { useLocalizedNavigate } from '../hooks/useLocalizedNavigate';
 export default function Login() {
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
   const { login } = useContext(AuthContext); // Removed 'user' as it's not needed for the login form
-  
-  const navigate = useNavigate();
+
+  const localizedNavigate = useLocalizedNavigate();
   const location = useLocation();
 
   // Consolidated redirect logic
   const handleRedirect = () => {
     // Look for the "from" path passed by ProtectedRoute, default to "/"
     const from = location.state?.from?.pathname || "/";
-    navigate(from, { replace: true });
+    localizedNavigate(from, { replace: true });
   };
 
   const sendLogin = async (e) => {

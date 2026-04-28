@@ -1,5 +1,6 @@
 import React from "react";
 import { Link } from "react-router-dom";
+import LocalizedLink from "../components/utiliy-comp/LocalisedLink";
 
 export default function OrderSuccess() {
   return (
@@ -12,12 +13,12 @@ export default function OrderSuccess() {
 
         <p className="text-gray-500 mb-6 md:mb-8">
           Your order{" "}
-          <Link
+          <LocalizedLink
             to="/orders/7564804"
             className="font-medium text-blue-500 hover:underline"
           >
             #7564804
-          </Link>{" "}
+          </LocalizedLink>{" "}
           will be processed within 24 hours during working days. We will notify
           you by email once your order has been shipped.
         </p>
@@ -61,19 +62,19 @@ export default function OrderSuccess() {
 
         <div className="flex items-center justify-center gap-4 flex-wrap">
 
-          <Link
+          <LocalizedLink
             to="/"
             className="text-white bg-blue-500 hover:bg-blue-600 font-medium rounded-lg text-sm px-5 py-2.5"
           >
             Track your order
-          </Link>
+          </LocalizedLink>
 
-          <Link
+          <LocalizedLink
             to="/"
             className="py-2.5 px-5 text-sm font-medium text-gray-900 bg-white rounded-lg border border-gray-200 hover:bg-gray-100"
           >
             Return to shopping
-          </Link>
+          </LocalizedLink>
 
         </div>
 

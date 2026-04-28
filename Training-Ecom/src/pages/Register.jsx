@@ -1,8 +1,8 @@
 import React, { useState, useContext, useEffect } from "react";
-import { useNavigate } from "react-router-dom";
 import { toast } from "react-toastify";
 import { AuthContext } from "../Utils/authContext";
 import api from "../api/axiosInstance";
+import { useLocalizedNavigate } from "../hooks/useLocalizedNavigate";
 
 export default function Register() {
   const [name, setName] = useState("");
@@ -10,14 +10,14 @@ export default function Register() {
   const [password, setPassword] = useState("");
   
   const { user } = useContext(AuthContext);
-  const navigate = useNavigate();
+  const localizedNavigate = useLocalizedNavigate();
 
   // Redirect if already logged in
   useEffect(() => {
     if (user) {
-      navigate("/", { replace: true });
+      localizedNavigate("/", { replace: true });
     }
-  }, [user, navigate]);
+  }, [user, localizedNavigate]);
 
   const registerUser = async (e) => {
     e.preventDefault();
@@ -33,7 +33,7 @@ export default function Register() {
       toast.success("Account Created. Please log in.");
       
       // Navigate to login after registration
-      navigate("/login");
+      localizedNavigate("/login");
     } catch (error) {
       console.error(error.response?.data || error.message);
       // More specific error handling

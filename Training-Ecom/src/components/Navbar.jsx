@@ -8,6 +8,7 @@ import LanguageSelector from "./utiliy-comp/LanguageSelect";
 import CurrencySelector from "./utiliy-comp/CurrencySelect";
 import { Flex } from "antd";
 import { strings } from "../constants/strings";
+import LocalizedLink from "./utiliy-comp/LocalisedLink";
 
 export default function Navbar({ menu }) {
   const { t } = useTranslation(); 
@@ -18,10 +19,10 @@ export default function Navbar({ menu }) {
   return (
     <nav className="sticky top-0 z-50 w-full bg-white/80 backdrop-blur-md border-b border-gray-200">
       <div className="max-w-screen-xl mx-auto flex items-center justify-between p-4">
-        
-        <Link to="/" className="text-2xl font-bold text-blue-600 tracking-tight">
+
+        <LocalizedLink to="/" className="text-2xl font-bold text-blue-600 tracking-tight">
           {t(strings.brand)}
-        </Link>
+        </LocalizedLink>
 
         <div className="flex items-center gap-2 md:gap-8">
           
@@ -31,13 +32,13 @@ export default function Navbar({ menu }) {
             <ul className="flex flex-col w-full md:flex-row md:items-center p-4 md:p-0 gap-2">
               {menu.map((item, index) => (
                 <li key={index}>
-                  <Link 
-                    to={item.href} 
+                  <LocalizedLink
+                    to={item.href}
                     onClick={() => setMobileMenuOpen(false)}
                     className="block py-3 px-4 rounded-lg text-gray-600 hover:bg-blue-50 hover:text-blue-600 font-medium transition"
                   >
                     {t(item.label)}
-                  </Link>
+                  </LocalizedLink>
                 </li>
               ))}
             </ul>
@@ -63,12 +64,12 @@ export default function Navbar({ menu }) {
                     </>
                   ) : (
                     <>
-                      <Link to="/login" onClick={() => setOpen(false)} className="block w-full text-left px-4 py-2 hover:bg-gray-50 text-sm font-medium">
+                      <LocalizedLink to="/login" onClick={() => setOpen(false)} className="block w-full text-left px-4 py-2 hover:bg-gray-50 text-sm font-medium">
                         {t(strings.login)}
-                      </Link>
-                      <Link to="/register" onClick={() => setOpen(false)} className="block w-full text-left px-4 py-2 hover:bg-gray-50 text-sm font-medium">
+                      </LocalizedLink>
+                      <LocalizedLink to="/register" onClick={() => setOpen(false)} className="block w-full text-left px-4 py-2 hover:bg-gray-50 text-sm font-medium">
                         {t(strings.register)}
-                      </Link>
+                      </LocalizedLink>
                     </>
                   )}
                   <div className="mx-4 py-4 border-t border-gray-200 flex flex-col items-center justify-center gap-4">

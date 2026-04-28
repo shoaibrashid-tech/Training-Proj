@@ -5,15 +5,15 @@ import ConfirmModal from "../components/Modals/ConfirmModal";
 import { useForm } from "react-hook-form";
 import { zodResolver } from "@hookform/resolvers/zod";
 import { checkoutSchema } from "../Utils/CheckoutValidationSchema";
-import { useNavigate } from "react-router-dom";
 import { useDispatch } from "react-redux";
 import { clearCart } from "../features/cart/cartSlice";
+import { useLocalizedNavigate } from "../hooks/useLocalizedNavigate";
 
 export default function CheckoutPage() {
 
   const [open, setOpen] = useState(false);
   const [step, setStep] = useState(1);
-  const navigate = useNavigate();
+  const localizedNavigate = useLocalizedNavigate();
   const dispatch = useDispatch();
 
   const {
@@ -49,7 +49,7 @@ export default function CheckoutPage() {
     dispatch(clearCart()); // empty cart
     setOpen(false);
 
-    navigate("/order-success");
+    localizedNavigate("/order-success");
   };
 
   const cartItems = useSelector((state) => state.cart.itemList);

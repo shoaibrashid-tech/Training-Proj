@@ -6,7 +6,7 @@ import PrimaryButton from '../components/utiliy-comp/PrimaryButton';
 import { useDispatch } from 'react-redux';
 import { addToCart } from '../features/cart/cartSlice';
 import { toast } from "react-toastify";
-import { useNavigate } from "react-router-dom";
+import { useLocalizedNavigate } from '../hooks/useLocalizedNavigate';
 import { useQuery } from "@tanstack/react-query";
 import api from '../api/axiosInstance';
 
@@ -15,7 +15,7 @@ export default function ProductPage() {
 
   const { id } = useParams();
   const dispatch = useDispatch();
-  const navigate = useNavigate();
+  const localizedNavigate = useLocalizedNavigate();
 
   const reviews = { href: '#', average: 4, totalCount: 117 }
 
@@ -33,7 +33,7 @@ export default function ProductPage() {
     toast.success("Product Added to Cart")
 
     setTimeout(() => {
-      navigate("/cart");
+      localizedNavigate("/cart");
     }, 1000);
   };
 

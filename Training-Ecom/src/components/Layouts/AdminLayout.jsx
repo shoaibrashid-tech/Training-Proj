@@ -1,6 +1,7 @@
 import React, { useContext, useState } from "react";
 import { Layout, Menu, Breadcrumb, theme, Avatar, Dropdown, Button, Drawer } from "antd";
-import { Outlet, Link, useLocation, useNavigate } from "react-router-dom";
+import { Outlet, Link, useLocation} from "react-router-dom";
+import { useLocalizedNavigate } from "../../hooks/useLocalizedNavigate";
 import {
   LaptopOutlined,
   UserOutlined,
@@ -9,6 +10,7 @@ import {
   MenuOutlined,
 } from "@ant-design/icons";
 import { AuthContext } from "../../Utils/authContext";
+import LocalizedLink from "../utiliy-comp/LocalisedLink";
 
 const { Header, Content, Sider } = Layout;
 
@@ -16,26 +18,26 @@ export default function AdminLayout() {
   const { token: { colorBgContainer, borderRadiusLG } } = theme.useToken();
   const [mobileDrawerOpen, setMobileDrawerOpen] = useState(false);
   const location = useLocation();
-  const navigate = useNavigate();
+  const localizedNavigate = useLocalizedNavigate();
   const { user, logout } = useContext(AuthContext);
 
-  const topMenu = [{ key: "1", label: <Link to="/">Store Front</Link> }];
+  const topMenu = [{ key: "1", label: <LocalizedLink to="/">Store Front</LocalizedLink> }];
   const sideMenu = [
-    { key: "sub1", icon: <LaptopOutlined />, label: <Link to="/admin/products">Products</Link> },
+    { key: "sub1", icon: <LaptopOutlined />, label: <LocalizedLink to="/admin/products">Products</LocalizedLink> },
   ];
 
   const pathSnippets = location.pathname.split("/").filter(Boolean);
   const breadcrumbItems = [
-    { title: <Link to="/admin">Admin</Link> },
+    { title: <LocalizedLink to="/admin">Admin</LocalizedLink> },
     ...pathSnippets.slice(1).map((value, index) => ({
-      title: <Link to={`/${pathSnippets.slice(0, index + 2).join("/")}`}>{value}</Link>
+      title: <LocalizedLink to={`/${pathSnippets.slice(0, index + 2).join("/")}`}>{value}</LocalizedLink>
     })),
   ];
 
   const handleLogout = () => {
     localStorage.removeItem("access_token");
     logout();
-    navigate("/login");
+    localizedNavigate("/login");
   };
 
   const userMenu = {

@@ -1,12 +1,12 @@
 import React, { memo } from 'react';
-import { useNavigate } from 'react-router-dom';
+import { useLocalizedNavigate } from '../hooks/useLocalizedNavigate';
 import SecondaryButton from './utiliy-comp/SecondaryButton';
 import PrimaryButton from './utiliy-comp/PrimaryButton';
 import { useLocale } from '../Utils/LocaleContext'; 
 import { formatCurrency, exchangeRates } from '../Utils/currencyFormater';
 
 function ProductCard({ product }) {
-    const navigate = useNavigate();
+    const localizedNavigate = useLocalizedNavigate();
     const { currency, locale } = useLocale();
 
     return (
@@ -37,7 +37,7 @@ function ProductCard({ product }) {
                     </p>
                     <PrimaryButton 
                         buttonText={"Buy Now"} 
-                        onClickHandler={() => navigate(`/product/${product.id}`)} 
+                        onClickHandler={() => localizedNavigate(`/product/${product.id}`)} 
                     />
                 </div>
             </div>

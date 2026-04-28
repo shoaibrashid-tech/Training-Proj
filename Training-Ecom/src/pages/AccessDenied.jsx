@@ -1,9 +1,9 @@
 import React from 'react';
-import { useNavigate } from 'react-router-dom';
 import { Button, Result } from 'antd';
+import { useLocalizedNavigate } from '../hooks/useLocalizedNavigate';
 
 export default function AccessDenied() {
-  const navigate = useNavigate();
+  const localizedNavigate = useLocalizedNavigate();
 
   return (
     <div className="flex h-screen items-center justify-center p-6">
@@ -12,10 +12,10 @@ export default function AccessDenied() {
         title="403"
         subTitle="Sorry, you are not authorized to access this page."
         extra={[
-          <Button type="primary" key="home" onClick={() => navigate('/')}>
+          <Button type="primary" key="home" onClick={() => localizedNavigate('/')}>
             Back Home
           </Button>,
-          <Button key="login" onClick={() => navigate('/login')}>
+          <Button key="login" onClick={() => localizedNavigate('/login')}>
             Log In
           </Button>
         ]}
